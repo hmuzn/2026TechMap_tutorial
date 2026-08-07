@@ -19,14 +19,6 @@ Apple Vision Pro에서 미리 학습한 실물 물체를 추적하고, 손가락
 
 샘플은 `SmallBox`, `LabeledCan`, `AsymmetricContainer`라는 참조 이름을 음색 프로필과 연결합니다. 다른 이름을 쓴다면 `DrumProfile.swift`도 함께 수정하세요.
 
-## 문서와 배포
-
-Xcode에서 **Product > Build Documentation**으로 로컬 문서를 확인할 수 있습니다. `main` 브랜치에 푸시하면 `.github/workflows/deploy-docc.yml`이 DocC archive를 만들어 GitHub Pages에 배포합니다. 저장소 이름과 hosting base path는 공지에 맞춰 `2026TechMap_tutorial`로 고정했습니다.
-
-## 리소스에 관하여
-
-`Scripts/generate_audio.swift`는 저작권 문제 없는 짧은 합성 타격음 세 개를 만드는 보조 스크립트입니다. 전체 Xcode가 선택된 환경에서 `swift Scripts/generate_audio.swift SpatialObjectDrums/Resources/Audio`로 실행하거나, 직접 제작·사용 허가를 받은 모노 WAV를 같은 이름으로 넣으세요. `.referenceobject`는 특정 실물의 형상·크기·질감에 종속되므로 저장소에서 범용 파일을 제공할 수 없습니다.
-
 ## 안전
 
 깨지거나 날카롭거나 쉽게 움직이는 물체를 사용하지 마세요. 주변 공간을 비우고, 물체에는 미끄럼 방지 패드를 부착하세요.
