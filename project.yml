@@ -1,0 +1,33 @@
+name: SpatialObjectDrums
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    visionOS: "2.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DOCC_HOSTING_BASE_PATH: 2026TechMap_tutorial
+targets:
+  SpatialObjectDrums:
+    type: application
+    platform: visionOS
+    sources:
+      - path: SpatialObjectDrums
+      - path: SpatialObjectDrums.docc
+    info:
+      path: SpatialObjectDrums/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.SpatialObjectDrums
+        PRODUCT_NAME: SpatialObjectDrums
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "7"
+        SUPPORTS_MACCATALYST: NO
+schemes:
+  SpatialObjectDrums:
+    build:
+      targets:
+        SpatialObjectDrums: all
+    run:
+      config: Debug
+

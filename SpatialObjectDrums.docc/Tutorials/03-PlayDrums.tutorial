@@ -1,0 +1,59 @@
+@Tutorial(time: 40) {
+    @Intro(title: "손가락으로 공간 드럼 연주하기") {
+        검지 끝의 이동을 물체 좌표계에서 판정하고 물체 위치에서 공간 음향을 재생합니다.
+    }
+
+    @Section(title: "검지 끝점 추적") {
+        @Steps {
+            @Step {
+                HandAnchor의 손 골격에서 `indexFingerTip` joint를 가져옵니다.
+            }
+            @Step {
+                anchor transform과 joint transform을 곱해 끝점의 월드 좌표를 계산합니다.
+            }
+            @Step {
+                직전 위치와 현재 위치를 chirality별로 저장합니다.
+
+                @Code(name: "DrumAppModel.swift", file: "DrumAppModel.swift")
+            }
+        }
+    }
+
+    @Section(title: "타격 판정") {
+        @ContentAndMedia {
+            끝점을 물체 로컬 좌표계로 변환하면 회전된 물체도 같은 바운딩 박스 규칙으로 검사할 수 있습니다. 끝점이 윗면을 위에서 아래로 통과하고 XZ 범위 안에 있을 때만 타격입니다.
+        }
+
+        @Steps {
+            @Step {
+                직전·현재 끝점을 entity transform의 역행렬로 변환합니다.
+            }
+            @Step {
+                Y가 `boundingBox.max.y`를 하향 통과했는지 확인합니다.
+            }
+            @Step {
+                100ms debounce로 한 번의 움직임이 여러 소리를 만들지 않게 합니다.
+
+                @Code(name: "TrackedDrum.swift", file: "TrackedDrum.swift")
+            }
+        }
+    }
+
+    @Section(title: "공간 음향과 피드백") {
+        @Steps {
+            @Step {
+                모노 WAV를 `AudioFileResource`로 로드합니다.
+            }
+            @Step {
+                타격 거리로 계산한 intensity를 -18dB에서 0dB 사이 gain으로 매핑합니다.
+            }
+            @Step {
+                추적 entity에서 오디오를 재생하고 타격 영역을 짧게 밝힙니다.
+            }
+            @Step {
+                Vision Pro에서 세 물체를 차례로 두드려 위치와 음색이 구분되는지 확인합니다.
+            }
+        }
+    }
+}
+

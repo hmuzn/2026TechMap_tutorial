@@ -1,0 +1,62 @@
+@Tutorial(time: 30) {
+    @Intro(title: "참조 물체와 프로젝트 준비하기") {
+        추적에 적합한 실물 물체를 고르고 Create ML에서 ARKit용 참조 객체를 준비합니다.
+    }
+
+    @Section(title: "요구 사항 확인") {
+        @ContentAndMedia {
+            이 튜토리얼은 visionOS 2 이상, Xcode 16 이상, Apple Vision Pro가 필요합니다. Object Tracking은 Simulator에서 동작하지 않습니다.
+
+            투명하거나 반사되는 물체, 형태가 변하는 물체, 무늬 없는 대칭 물체는 피하세요. 단단하고 고유한 질감과 비대칭 특징을 가진 물체가 적합합니다.
+        }
+
+        @Steps {
+            @Step {
+                주변 공간을 정리하고 테이블 위에 미끄럼 방지 패드를 놓습니다.
+            }
+            @Step {
+                무늬 있는 작은 상자, 라벨이 붙은 원통, 비대칭 용기처럼 서로 구분되는 물체 세 개를 고릅니다.
+            }
+        }
+    }
+
+    @Section(title: "Reference Object 만들기") {
+        @ContentAndMedia {
+            각 실물을 실제 크기의 USDZ로 만들고 Create ML의 Object Tracking 템플릿으로 학습합니다. +Y를 위쪽, +Z를 앞쪽으로 통일하세요.
+        }
+
+        @Steps {
+            @Step {
+                Object Capture로 물체를 촬영하고 photorealistic USDZ를 만듭니다.
+            }
+            @Step {
+                Reality Composer Pro에서 원점, 축, 실제 치수를 확인합니다.
+            }
+            @Step {
+                Create ML에서 Viewing Angle을 Upright로 설정하고 각 물체를 개별 `.referenceobject`로 내보냅니다.
+            }
+            @Step {
+                파일을 앱의 `Resources/ReferenceObjects`에 넣고 이름을 `SmallBox`, `LabeledCan`, `AsymmetricContainer` 중 하나로 지정합니다.
+            }
+        }
+    }
+
+    @Section(title: "권한과 Full Space 구성") {
+        @Steps {
+            @Step {
+                Xcode의 Signing & Capabilities에서 World Sensing capability를 추가합니다.
+            }
+            @Step {
+                `Info.plist`의 손 추적과 World Sensing 사용 설명을 확인합니다.
+
+                @Code(name: "Info.plist", file: "Info.plist")
+            }
+            @Step {
+                시작 버튼이 Mixed Immersive Space를 여는지 확인합니다.
+
+                @Code(name: "ContentView.swift", file: "ContentView.swift")
+            }
+        }
+    }
+}
+

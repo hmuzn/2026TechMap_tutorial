@@ -1,0 +1,14 @@
+@Tutorials(name: "Spatial Object Drums") {
+    @Intro(title: "실물 물체로 연주하는 공간 드럼") {
+        Apple Vision Pro에서 Object Tracking과 Hand Tracking을 결합해 주변 물체를 타악기로 바꿉니다.
+
+    }
+
+    @Chapter(name: "공간 드럼 만들기") {
+        물체를 등록하고 추적한 뒤 손가락 타격으로 공간 음향을 재생합니다.
+
+        @TutorialReference(tutorial: "doc:Prepare")
+        @TutorialReference(tutorial: "doc:TrackObjects")
+        @TutorialReference(tutorial: "doc:PlayDrums")
+    }
+}

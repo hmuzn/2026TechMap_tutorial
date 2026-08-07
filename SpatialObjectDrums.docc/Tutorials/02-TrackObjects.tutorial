@@ -1,0 +1,53 @@
+@Tutorial(time: 35) {
+    @Intro(title: "실물 물체 추적하기") {
+        ReferenceObject를 로드하고 ObjectTrackingProvider의 anchor update를 RealityKit Entity에 반영합니다.
+    }
+
+    @Section(title: "추적 세션 시작") {
+        @ContentAndMedia {
+            Object Tracking은 임의의 물체를 분류하는 기능이 아닙니다. 앱에 포함한 reference object와 일치하는 실물만 찾아 위치, 방향, 바운딩 박스를 제공합니다.
+        }
+
+        @Steps {
+            @Step {
+                Bundle에서 `.referenceobject` 파일을 비동기로 로드합니다.
+            }
+            @Step {
+                `ObjectTrackingProvider`와 `HandTrackingProvider`를 같은 `ARKitSession`에서 실행합니다.
+
+                @Code(name: "DrumAppModel.swift", file: "DrumAppModel.swift")
+            }
+        }
+    }
+
+    @Section(title: "Anchor 시각화") {
+        @Steps {
+            @Step {
+                `.added` update에서 ObjectAnchor의 바운딩 박스 크기로 얇은 타격 영역을 생성합니다.
+            }
+            @Step {
+                타격 영역을 `boundingBox.max.y` 바로 위에 배치합니다.
+            }
+            @Step {
+                `.updated`에서 entity transform과 `isTracked` 상태를 갱신하고, `.removed`에서 제거합니다.
+
+                @Code(name: "TrackedDrum.swift", file: "TrackedDrum.swift")
+            }
+        }
+    }
+
+    @Section(title: "형태를 음색에 연결") {
+        @ContentAndMedia {
+            ARKit은 물체의 의미나 재질을 자동 판별하지 않습니다. 형태와 음색은 reference object 이름에 연결한 앱 메타데이터로 정의합니다.
+        }
+
+        @Steps {
+            @Step {
+                작은 상자는 Wood Block, 라벨 통은 Tom, 나머지는 Percussion FX로 연결합니다.
+
+                @Code(name: "DrumProfile.swift", file: "DrumProfile.swift")
+            }
+        }
+    }
+}
+
