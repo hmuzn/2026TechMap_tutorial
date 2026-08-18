@@ -75,9 +75,10 @@ final class DrumAppModel {
         for await update in handTracking.anchorUpdates {
             let hand = update.anchor
             guard hand.isTracked,
-                  let skeleton = hand.handSkeleton,
-                  let joint = skeleton.joint(.indexFingerTip),
-                  joint.isTracked else { continue }
+                  let skeleton = hand.handSkeleton else { continue }
+
+            let joint = skeleton.joint(.indexFingerTip)
+            guard joint.isTracked else { continue }
 
             let transform = hand.originFromAnchorTransform * joint.anchorFromJointTransform
             let current = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
