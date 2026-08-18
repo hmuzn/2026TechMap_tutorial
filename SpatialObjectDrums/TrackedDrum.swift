@@ -9,7 +9,7 @@ final class TrackedDrum {
     let entity = Entity()
     private let feedback: ModelEntity
     private let profile: DrumProfile
-    private let bounds: BoundingBox
+    private let bounds: ObjectAnchor.AxisAlignedBoundingBox
     private var audio: AudioFileResource?
     private(set) var isTracked = true
 
@@ -18,7 +18,7 @@ final class TrackedDrum {
         bounds = anchor.boundingBox
         profile = DrumProfile.forReferenceObject(named: anchor.referenceObject.name)
 
-        let size = anchor.boundingBox.extents
+        let size = anchor.boundingBox.extent
         feedback = ModelEntity(
             mesh: .generateBox(size: [size.x, 0.004, size.z]),
             materials: [SimpleMaterial(color: .orange.withAlphaComponent(0.28), isMetallic: false)]
@@ -50,7 +50,7 @@ final class TrackedDrum {
 
     func play(intensity: Float) {
         guard let audio else { return }
-        entity.spatialAudio?.gain = -18 + 18 * intensity
+        entity.spatialAudio?.gain = Double(-18 + 18 * intensity)
         entity.playAudio(audio)
         feedback.components.set(OpacityComponent(opacity: 0.9))
         Task {

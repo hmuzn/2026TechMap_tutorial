@@ -31,7 +31,7 @@ final class DrumAppModel {
             try await session.run([objectProvider, handTracking])
 
             async let objects: Void = consumeObjectUpdates(from: objectProvider, root: root)
-            async let hands: Void = consumeHandUpdates(root: root)
+            async let hands: Void = consumeHandUpdates()
             _ = await (objects, hands)
         } catch {
             errorMessage = error.localizedDescription
@@ -40,8 +40,10 @@ final class DrumAppModel {
 
     func stop() {
         session.stop()
+        trackedDrums.values.forEach { $0.entity.removeFromParent() }
         trackedDrums.removeAll()
         previousTips.removeAll()
+        lastHitAt.removeAll()
     }
 
     private func loadReferenceObjects() async throws -> [ReferenceObject] {
@@ -69,7 +71,7 @@ final class DrumAppModel {
         }
     }
 
-    private func consumeHandUpdates(root: Entity) async {
+    private func consumeHandUpdates() async {
         for await update in handTracking.anchorUpdates {
             let hand = update.anchor
             guard hand.isTracked,
@@ -103,4 +105,3 @@ enum DrumError: LocalizedError {
         }
     }
 }
-

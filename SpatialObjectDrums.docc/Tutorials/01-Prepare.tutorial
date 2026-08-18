@@ -1,62 +1,87 @@
 @Tutorial(time: 30) {
-    @Intro(title: "참조 물체와 프로젝트 준비하기") {
-        추적에 적합한 실물 물체를 고르고 Create ML에서 ARKit용 참조 객체를 준비합니다.
+    @Intro(title: "프로젝트와 참조 물체 준비하기") {
+        추적에 적합한 실물을 고르고 Create ML에서 `.referenceobject`를 만든 다음, Mixed Immersive Space를 여는 앱의 골격을 구성합니다.
     }
 
-    @Section(title: "요구 사항 확인") {
+    @Section(title: "개발 환경과 물체 선정") {
         @ContentAndMedia {
-            이 튜토리얼은 visionOS 2 이상, Xcode 16 이상, Apple Vision Pro가 필요합니다. Object Tracking은 Simulator에서 동작하지 않습니다.
+            이 프로젝트는 Xcode 16 이상, visionOS 2 이상, Apple Vision Pro 실기기가 필요합니다. Simulator에서는 화면과 일반 RealityKit 콘텐츠를 확인할 수 있지만 Object Tracking 결과를 검증할 수 없습니다.
 
-            투명하거나 반사되는 물체, 형태가 변하는 물체, 무늬 없는 대칭 물체는 피하세요. 단단하고 고유한 질감과 비대칭 특징을 가진 물체가 적합합니다.
+            Object Tracking은 주변의 모든 물체를 자동으로 분류하지 않습니다. 앱에 포함한 참조 물체와 일치하는 실물을 찾아 위치와 자세를 알려주는 기능입니다.
         }
 
         @Steps {
             @Step {
-                주변 공간을 정리하고 테이블 위에 미끄럼 방지 패드를 놓습니다.
+                테이블 주변을 비우고, 깨지지 않으며 쉽게 움직이지 않는 물체를 준비합니다. Vision Pro를 착용한 상태에서 빠르게 손을 휘두르지 마세요.
             }
             @Step {
-                무늬 있는 작은 상자, 라벨이 붙은 원통, 비대칭 용기처럼 서로 구분되는 물체 세 개를 고릅니다.
+                무늬 있는 작은 상자, 고유 라벨이 붙은 원통, 비대칭 용기처럼 형태와 표면 특징이 서로 다른 물체를 2~3개 고릅니다.
+            }
+            @Step {
+                각 물체의 가로·세로·높이를 미터 단위로 측정하고 위쪽과 앞쪽 방향을 표시합니다. 이후 3D 모델의 축과 실제 물체의 방향이 같아야 합니다.
             }
         }
     }
 
-    @Section(title: "Reference Object 만들기") {
+    @Section(title: "Reference Object 생성") {
         @ContentAndMedia {
-            각 실물을 실제 크기의 USDZ로 만들고 Create ML의 Object Tracking 템플릿으로 학습합니다. +Y를 위쪽, +Z를 앞쪽으로 통일하세요.
+            USDZ는 물체의 3D 외형을 담는 모델 파일이고, `.referenceobject`는 Create ML이 USDZ를 기반으로 학습해 ARKit이 인식에 사용하는 결과물입니다. 앱에는 최종 `.referenceobject` 파일을 포함합니다.
         }
 
         @Steps {
             @Step {
-                Object Capture로 물체를 촬영하고 photorealistic USDZ를 만듭니다.
+                Object Capture 또는 다른 3D 스캔 방식으로 물체의 실제 크기를 반영한 USDZ를 만듭니다. 반사와 그림자를 줄이고 모든 면을 충분히 촬영합니다.
             }
             @Step {
-                Reality Composer Pro에서 원점, 축, 실제 치수를 확인합니다.
+                Reality Composer Pro에서 원점, 실제 치수, +Y 위쪽 방향을 확인합니다. 모델 크기가 실제 물체와 다르면 먼저 수정합니다.
             }
             @Step {
-                Create ML에서 Viewing Angle을 Upright로 설정하고 각 물체를 개별 `.referenceobject`로 내보냅니다.
+                Create ML의 Object Tracking 템플릿에 USDZ를 넣어 학습하고 `.referenceobject`로 내보냅니다.
             }
             @Step {
-                파일을 앱의 `Resources/ReferenceObjects`에 넣고 이름을 `SmallBox`, `LabeledCan`, `AsymmetricContainer` 중 하나로 지정합니다.
+                결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 추가하고 Target Membership을 켭니다. 이름은 `SmallBox`, `LabeledCan`, `AsymmetricContainer` 중 하나로 통일합니다.
             }
         }
     }
 
-    @Section(title: "권한과 Full Space 구성") {
+    @Section(title: "Mixed Immersive Space 열기") {
+        @ContentAndMedia {
+            창에서는 시작과 오류 상태를 보여주고, 실제 추적은 Mixed Immersive Space 안의 `RealityView`에서 수행합니다. Mixed 스타일을 사용하면 주변 실물을 보면서 가상 피드백을 겹칠 수 있습니다.
+        }
+
         @Steps {
             @Step {
-                Xcode의 Signing & Capabilities에서 World Sensing capability를 추가합니다.
+                visionOS App 프로젝트에 `SpatialObjectDrums.docc` 카탈로그를 추가합니다. Deployment Target은 visionOS 2.0 이상으로 설정합니다.
             }
             @Step {
-                `Info.plist`의 손 추적과 World Sensing 사용 설명을 확인합니다.
+                Target의 Signing & Capabilities에서 World Sensing을 추가하고 `Info.plist`에 손 추적과 주변 공간 접근 목적을 작성합니다.
 
                 @Code(name: "Info.plist", file: "Info.plist")
             }
             @Step {
-                시작 버튼이 Mixed Immersive Space를 여는지 확인합니다.
+                앱 진입점에 WindowGroup과 `DrumSpace`라는 Mixed Immersive Space를 선언합니다.
+
+                @Code(name: "SpatialObjectDrumsApp.swift", file: "SpatialObjectDrumsApp.swift")
+            }
+            @Step {
+                시작 버튼으로 Immersive Space를 열고 닫으며, 오류 메시지를 창에 표시합니다.
 
                 @Code(name: "ContentView.swift", file: "ContentView.swift")
             }
         }
     }
-}
 
+    @Section(title: "첫 실행 점검") {
+        @Steps {
+            @Step {
+                Signing Team과 Apple Vision Pro 실행 대상을 선택한 뒤 빌드합니다.
+            }
+            @Step {
+                앱을 처음 실행할 때 손 추적과 주변 공간 접근 요청을 허용합니다.
+            }
+            @Step {
+                Start Drumming 버튼을 눌렀을 때 주변 공간을 유지한 Mixed Immersive Space가 열리는지 확인합니다. 아직 참조 파일이 없다면 누락 안내가 표시되는 것이 정상입니다.
+            }
+        }
+    }
+}

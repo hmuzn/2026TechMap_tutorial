@@ -1,53 +1,79 @@
-@Tutorial(time: 35) {
-    @Intro(title: "실물 물체 추적하기") {
-        ReferenceObject를 로드하고 ObjectTrackingProvider의 anchor update를 RealityKit Entity에 반영합니다.
+@Tutorial(time: 40) {
+    @Intro(title: "실물 물체와 손가락 추적하기") {
+        참조 물체를 로드해 Object Tracking과 Hand Tracking을 한 세션에서 실행하고, 각 물체 위에 얇은 타격 영역을 표시합니다.
     }
 
-    @Section(title: "추적 세션 시작") {
+    @Section(title: "ARKit 세션 시작") {
         @ContentAndMedia {
-            Object Tracking은 임의의 물체를 분류하는 기능이 아닙니다. 앱에 포함한 reference object와 일치하는 실물만 찾아 위치, 방향, 바운딩 박스를 제공합니다.
+            visionOS의 ARKit은 필요한 기능을 Data Provider 단위로 실행합니다. 여기서는 `ObjectTrackingProvider`와 `HandTrackingProvider`를 하나의 `ARKitSession`에 전달합니다.
         }
 
         @Steps {
             @Step {
-                Bundle에서 `.referenceobject` 파일을 비동기로 로드합니다.
+                Bundle의 `ReferenceObjects` 폴더에서 `.referenceobject` URL을 찾고 `ReferenceObject(from:)`으로 비동기 로드합니다.
             }
             @Step {
-                `ObjectTrackingProvider`와 `HandTrackingProvider`를 같은 `ARKitSession`에서 실행합니다.
+                두 Provider가 현재 기기에서 지원되는지 먼저 검사합니다. 참조 물체가 하나도 없으면 사용자가 해결할 수 있는 오류를 표시합니다.
+            }
+            @Step {
+                로드한 참조 물체로 `ObjectTrackingProvider`를 생성하고 Hand Tracking Provider와 함께 세션을 실행합니다.
 
                 @Code(name: "DrumAppModel.swift", file: "DrumAppModel.swift")
             }
         }
     }
 
-    @Section(title: "Anchor 시각화") {
+    @Section(title: "ObjectAnchor를 Entity에 반영") {
+        @ContentAndMedia {
+            ARKit은 물체를 처음 찾거나 자세가 바뀌거나 추적 대상에서 제거될 때 anchor update를 보냅니다. RealityKit Entity의 transform을 `originFromAnchorTransform`으로 갱신하면 가상 콘텐츠가 실물에 붙어 움직입니다.
+        }
+
         @Steps {
             @Step {
-                `.added` update에서 ObjectAnchor의 바운딩 박스 크기로 얇은 타격 영역을 생성합니다.
+                `.added` 이벤트에서 `TrackedDrum`을 만들고 RealityView의 루트 Entity에 추가합니다.
             }
             @Step {
-                타격 영역을 `boundingBox.max.y` 바로 위에 배치합니다.
+                `.updated` 이벤트에서 transform과 `isTracked` 상태를 갱신합니다. 추적이 잠시 끊기면 피드백 Entity를 숨깁니다.
             }
             @Step {
-                `.updated`에서 entity transform과 `isTracked` 상태를 갱신하고, `.removed`에서 제거합니다.
+                `.removed` 이벤트에서 딕셔너리와 RealityKit 계층 양쪽에서 Entity를 제거합니다.
+            }
+            @Step {
+                `ObjectAnchor.boundingBox`의 가로와 깊이를 사용해 4mm 높이의 얇은 상자를 만들고 윗면 바로 위에 배치합니다.
 
                 @Code(name: "TrackedDrum.swift", file: "TrackedDrum.swift")
             }
         }
     }
 
-    @Section(title: "형태를 음색에 연결") {
+    @Section(title: "참조 이름을 음색 프로필에 연결") {
         @ContentAndMedia {
-            ARKit은 물체의 의미나 재질을 자동 판별하지 않습니다. 형태와 음색은 reference object 이름에 연결한 앱 메타데이터로 정의합니다.
+            ARKit은 물체가 상자인지 원통인지, 어떤 소리를 내야 하는지 추론하지 않습니다. 이 의미 정보는 reference object 이름과 앱의 프로필을 명시적으로 연결해 관리합니다.
         }
 
         @Steps {
             @Step {
-                작은 상자는 Wood Block, 라벨 통은 Tom, 나머지는 Percussion FX로 연결합니다.
+                `SmallBox`는 Wood Block, `LabeledCan`은 Tom, 나머지는 Percussion FX로 연결합니다.
 
                 @Code(name: "DrumProfile.swift", file: "DrumProfile.swift")
+            }
+            @Step {
+                자신의 reference object 이름이 다르면 `forReferenceObject(named:)`의 문자열을 실제 이름에 맞게 변경합니다.
+            }
+        }
+    }
+
+    @Section(title: "물체 추적 검증") {
+        @Steps {
+            @Step {
+                밝고 복잡하지 않은 테이블 위에 학습에 사용한 실물을 놓고 여러 방향에서 천천히 바라봅니다.
+            }
+            @Step {
+                물체를 찾으면 주황색 타격 영역이 윗면에 붙어 있는지 확인합니다. 뒤집히거나 크기가 맞지 않으면 USDZ의 축과 실제 치수를 다시 확인합니다.
+            }
+            @Step {
+                물체가 화면에서 벗어났을 때 피드백이 숨겨지고 다시 인식했을 때 돌아오는지 확인합니다.
             }
         }
     }
 }
-

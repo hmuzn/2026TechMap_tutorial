@@ -3,5 +3,6 @@
 DerivedData/
 *.xcuserstate
 xcuserdata/
+*.xcodeproj/
 outputs/
 work/
