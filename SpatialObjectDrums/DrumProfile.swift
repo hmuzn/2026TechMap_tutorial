@@ -10,14 +10,35 @@ struct DrumProfile: Sendable {
     let audioResource: String
 
     static func forReferenceObject(named name: String) -> DrumProfile {
+        let normalizedName = name
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "_", with: "")
+            .replacingOccurrences(of: "-", with: "")
+            .lowercased()
+
+        if normalizedName.contains("iphone17") {
+            return .init(
+                displayName: "iPhone 17 Black",
+                shape: .box,
+                audioResource: "percussion-fx.wav"
+            )
+        }
+
+        if normalizedName.contains("magickeyboard") {
+            return .init(
+                displayName: "Apple Magic Keyboard",
+                shape: .box,
+                audioResource: "wood-block.wav"
+            )
+        }
+
         switch name {
         case "SmallBox":
-            .init(displayName: "Wood Block", shape: .box, audioResource: "wood-block.wav")
+            return .init(displayName: "Wood Block", shape: .box, audioResource: "wood-block.wav")
         case "LabeledCan":
-            .init(displayName: "Tom", shape: .cylinder, audioResource: "tom.wav")
+            return .init(displayName: "Tom", shape: .cylinder, audioResource: "tom.wav")
         default:
-            .init(displayName: "Percussion FX", shape: .irregular, audioResource: "percussion-fx.wav")
+            return .init(displayName: "Percussion FX", shape: .irregular, audioResource: "percussion-fx.wav")
         }
     }
 }
-

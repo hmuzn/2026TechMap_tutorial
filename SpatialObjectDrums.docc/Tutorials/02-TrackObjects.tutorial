@@ -5,18 +5,18 @@
 
     @Section(title: "ARKit 세션 시작") {
         @ContentAndMedia {
-            visionOS의 ARKit은 필요한 기능을 Data Provider 단위로 실행합니다. 여기서는 `ObjectTrackingProvider`와 `HandTrackingProvider`를 하나의 `ARKitSession`에 전달합니다.
+            visionOS의 ARKit은 필요한 기능을 Data Provider 단위로 실행합니다. 여기서는 `ObjectTrackingProvider`와 `HandTrackingProvider`를 하나의 `ARKitSession`에 전달합니다. 앱 창이 열릴 때 ARKit 시스템 서비스와 먼저 연결하지 않도록 Session과 Provider는 사용할 Reference Object가 확인된 뒤 생성합니다.
         }
 
         @Steps {
             @Step {
-                Bundle의 `ReferenceObjects` 폴더에서 `.referenceobject` URL을 찾고 `ReferenceObject(from:)`으로 비동기 로드합니다.
+                Xcode가 Reference Object 폴더 구조를 보존하거나 앱 번들 루트로 평탄화할 수 있으므로 두 위치에서 `.referenceobject` URL을 찾고 `ReferenceObject(from:)`으로 비동기 로드합니다.
             }
             @Step {
-                두 Provider가 현재 기기에서 지원되는지 먼저 검사합니다. 참조 물체가 하나도 없으면 사용자가 해결할 수 있는 오류를 표시합니다.
+                Immersive Space를 열기 전에 두 Provider가 현재 기기에서 지원되는지와 번들에 포함된 iPhone·Magic Keyboard Reference Object가 정상 로드되는지 검사합니다.
             }
             @Step {
-                로드한 참조 물체로 `ObjectTrackingProvider`를 생성하고 Hand Tracking Provider와 함께 세션을 실행합니다.
+                로드한 참조 물체로 두 Provider와 Session을 지연 생성하고 함께 실행합니다. 실행 ID와 취소 상태를 검사해 종료된 이전 세션의 update가 새 세션에 반영되지 않게 합니다.
 
                 @Code(name: "DrumAppModel.swift", file: "DrumAppModel.swift")
             }
@@ -53,12 +53,12 @@
 
         @Steps {
             @Step {
-                `SmallBox`는 Wood Block, `LabeledCan`은 Tom, 나머지는 Percussion FX로 연결합니다.
+                공백, 밑줄, 하이픈을 제외한 참조 이름에 `iphone17`이 포함되면 iPhone 17 Black과 Percussion FX로, `magickeyboard`가 포함되면 Apple Magic Keyboard와 Wood Block으로 연결합니다. 기존 `SmallBox`와 `LabeledCan` 프로필도 확장 예제로 유지합니다.
 
                 @Code(name: "DrumProfile.swift", file: "DrumProfile.swift")
             }
             @Step {
-                자신의 reference object 이름이 다르면 `forReferenceObject(named:)`의 문자열을 실제 이름에 맞게 변경합니다.
+                자신의 reference object 이름이 다르면 `forReferenceObject(named:)`의 정규화 규칙이나 프로필을 실제 이름에 맞게 변경합니다.
             }
         }
     }
@@ -69,7 +69,7 @@
                 밝고 복잡하지 않은 테이블 위에 학습에 사용한 실물을 놓고 여러 방향에서 천천히 바라봅니다.
             }
             @Step {
-                물체를 찾으면 주황색 타격 영역이 윗면에 붙어 있는지 확인합니다. 뒤집히거나 크기가 맞지 않으면 USDZ의 축과 실제 치수를 다시 확인합니다.
+                iPhone이나 Magic Keyboard를 찾으면 초록색 타격 영역과 해당 물체 이름의 인식 완료 안내가 나타나는지 확인합니다. 뒤집히거나 크기가 맞지 않으면 Reference Object의 축과 실제 치수를 다시 확인합니다.
             }
             @Step {
                 물체가 화면에서 벗어났을 때 피드백이 숨겨지고 다시 인식했을 때 돌아오는지 확인합니다.

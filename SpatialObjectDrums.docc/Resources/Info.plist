@@ -1,5 +1,35 @@
-<key>NSHandsTrackingUsageDescription</key>
-<string>손가락이 실물 물체를 두드리는 동작을 감지합니다.</string>
-<key>NSWorldSensingUsageDescription</key>
-<string>등록된 실물 물체의 위치와 크기를 추적합니다.</string>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Spatial Object Drums</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+	</dict>
+	<key>NSHandsTrackingUsageDescription</key>
+	<string>손가락이 실물 물체를 두드리는 동작을 감지합니다.</string>
+	<key>NSWorldSensingUsageDescription</key>
+	<string>등록된 실물 물체의 위치와 크기를 추적합니다.</string>
+</dict>
+</plist>

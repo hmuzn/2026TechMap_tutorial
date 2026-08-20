@@ -1,6 +1,6 @@
-@Tutorial(time: 30) {
+@Tutorial(time: 35) {
     @Intro(title: "프로젝트와 참조 물체 준비하기") {
-        추적에 적합한 실물을 고르고 Create ML에서 `.referenceobject`를 만든 다음, Mixed Immersive Space를 여는 앱의 골격을 구성합니다.
+        저장소에 포함된 iPhone 17 Black 모델이나 Apple 공식 Magic Keyboard `.referenceobject`를 준비하고, Mixed Immersive Space를 여는 앱의 골격을 구성합니다.
     }
 
     @Section(title: "개발 환경과 물체 선정") {
@@ -8,6 +8,8 @@
             이 프로젝트는 Xcode 16 이상, visionOS 2 이상, Apple Vision Pro 실기기가 필요합니다. Simulator에서는 화면과 일반 RealityKit 콘텐츠를 확인할 수 있지만 Object Tracking 결과를 검증할 수 없습니다.
 
             Object Tracking은 주변의 모든 물체를 자동으로 분류하지 않습니다. 앱에 포함한 참조 물체와 일치하는 실물을 찾아 위치와 자세를 알려주는 기능입니다.
+
+            완성된 예제에는 케이스를 벗긴 검은색 iPhone 17용 Reference Object가 포함되어 있습니다. Magic Keyboard는 Apple 공식 샘플에서 검증된 파일을 내려받아 추가할 수 있으므로 어느 쪽도 직접 Create ML 학습을 기다릴 필요가 없습니다.
         }
 
         @Steps {
@@ -15,7 +17,7 @@
                 테이블 주변을 비우고, 깨지지 않으며 쉽게 움직이지 않는 물체를 준비합니다. Vision Pro를 착용한 상태에서 빠르게 손을 휘두르지 마세요.
             }
             @Step {
-                무늬 있는 작은 상자, 고유 라벨이 붙은 원통, 비대칭 용기처럼 형태와 표면 특징이 서로 다른 물체를 2~3개 고릅니다.
+                기본 예제를 실행할 때는 케이스를 벗긴 검은색 iPhone 17 또는 약 27.9 × 11.5cm 크기의 컴팩트 Apple Magic Keyboard를 준비합니다. 숫자 키패드가 붙은 큰 키보드는 샘플 모델과 크기가 다릅니다.
             }
             @Step {
                 각 물체의 가로·세로·높이를 미터 단위로 측정하고 위쪽과 앞쪽 방향을 표시합니다. 이후 3D 모델의 축과 실제 물체의 방향이 같아야 합니다.
@@ -23,9 +25,32 @@
         }
     }
 
+    @Section(title: "Apple Magic Keyboard 모델 내려받기") {
+        @ContentAndMedia {
+            Apple의 [Exploring object tracking with ARKit](https://developer.apple.com/documentation/visionos/exploring_object_tracking_with_arkit) 샘플에는 `Apple_Magic_Keyboard.referenceobject`가 포함되어 있습니다. 이 저장소는 Apple 바이너리를 재배포하지 않고 공식 Apple 서버에서 직접 내려받는 설치 스크립트를 제공합니다.
+
+            현재 Apple 문서의 Download는 Xcode 27·visionOS 27용 Reference Object 포맷 2.0입니다. Xcode 16~26에서는 읽을 수 없으므로 설치 스크립트는 Apple이 계속 호스팅하는 2024년 Xcode 16·visionOS 2용 포맷 1.0 아카이브를 사용합니다.
+        }
+
+        @Steps {
+            @Step {
+                프로젝트 루트에서 `make install-magic-keyboard`를 실행합니다. 스크립트가 Apple 공식 ZIP을 다운로드하고 Apple이 공개한 SHA-512 체크섬을 검사합니다.
+            }
+            @Step {
+                스크립트는 현재 Xcode의 `referenceobjectc`로 파일 호환성을 검사합니다. 최신 포맷을 구형 Xcode에서 잘못 사용하면 나타나는 `Unsupported version 2.0` 문제를 설치 전에 차단합니다.
+            }
+            @Step {
+                검증된 파일을 `SpatialObjectDrums/Resources/ReferenceObjects/Apple_Magic_Keyboard.referenceobject`에 복사하고 XcodeGen으로 프로젝트를 다시 생성합니다.
+            }
+            @Step {
+                이 파일은 Apple 샘플의 `LICENSE.txt` 적용을 받습니다. 숫자 키패드 모델처럼 외형이나 크기가 다른 Magic Keyboard는 별도의 Reference Object를 만들어야 합니다.
+            }
+        }
+    }
+
     @Section(title: "Reference Object 생성") {
         @ContentAndMedia {
-            USDZ는 물체의 3D 외형을 담는 모델 파일이고, `.referenceobject`는 Create ML이 USDZ를 기반으로 학습해 ARKit이 인식에 사용하는 결과물입니다. 앱에는 최종 `.referenceobject` 파일을 포함합니다.
+            USDZ는 물체의 3D 외형을 담는 모델 파일이고, `.referenceobject`는 Create ML이 USDZ를 기반으로 학습해 ARKit이 인식에 사용하는 결과물입니다. 이 저장소에는 완성된 `iPhone17Black.referenceobject`와 선택적으로 다시 학습할 때 사용할 저폴리 USDZ가 함께 들어 있습니다.
         }
 
         @Steps {
@@ -36,10 +61,13 @@
                 Reality Composer Pro에서 원점, 실제 치수, +Y 위쪽 방향을 확인합니다. 모델 크기가 실제 물체와 다르면 먼저 수정합니다.
             }
             @Step {
-                Create ML의 Object Tracking 템플릿에 USDZ를 넣어 학습하고 `.referenceobject`로 내보냅니다.
+                기본 iPhone 모델은 그대로 사용합니다. 자신의 물체로 바꿀 때만 Create ML의 Object Tracking 템플릿에 USDZ를 넣어 학습하고 `.referenceobject`로 내보냅니다.
             }
             @Step {
-                결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 추가하고 Target Membership을 켭니다. 이름은 `SmallBox`, `LabeledCan`, `AsymmetricContainer` 중 하나로 통일합니다.
+                결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 추가하고 Target Membership을 켭니다. 기본 파일 이름은 `iPhone17Black.referenceobject`입니다.
+            }
+            @Step {
+                경로에 공백이 있으면 일부 Create ML 버전이 `%20` 폴더를 만들 수 있습니다. 포함된 `train_iphone17.sh`는 공백 없는 임시 경로에서 학습한 뒤 결과를 올바른 위치로 복사합니다.
             }
         }
     }
@@ -54,7 +82,7 @@
                 visionOS App 프로젝트에 `SpatialObjectDrums.docc` 카탈로그를 추가합니다. Deployment Target은 visionOS 2.0 이상으로 설정합니다.
             }
             @Step {
-                Target의 Signing & Capabilities에서 World Sensing을 추가하고 `Info.plist`에 손 추적과 주변 공간 접근 목적을 작성합니다.
+                Target의 Signing & Capabilities에서 World Sensing을 추가하고 `Info.plist`에 손 추적과 주변 공간 접근 목적을 작성합니다. Immersive Space를 별도 Scene으로 열 수 있도록 다중 Scene 지원도 활성화합니다.
 
                 @Code(name: "Info.plist", file: "Info.plist")
             }
@@ -64,7 +92,7 @@
                 @Code(name: "SpatialObjectDrumsApp.swift", file: "SpatialObjectDrumsApp.swift")
             }
             @Step {
-                시작 버튼으로 Immersive Space를 열고 닫으며, 오류 메시지를 창에 표시합니다.
+                시작 버튼은 Reference Object를 먼저 검사하고 Immersive Space를 엽니다. 중복 입력을 차단하고 전환이 응답하지 않으면 12초 후 해결 방법을 표시합니다.
 
                 @Code(name: "ContentView.swift", file: "ContentView.swift")
             }
@@ -80,7 +108,7 @@
                 앱을 처음 실행할 때 손 추적과 주변 공간 접근 요청을 허용합니다.
             }
             @Step {
-                Start Drumming 버튼을 눌렀을 때 주변 공간을 유지한 Mixed Immersive Space가 열리는지 확인합니다. 아직 참조 파일이 없다면 누락 안내가 표시되는 것이 정상입니다.
+                Start Drumming 버튼을 눌렀을 때 주변 공간을 유지한 Mixed Immersive Space가 열리는지 확인합니다. iPhone 또는 설치한 Magic Keyboard를 비추면 초록색 타격 영역과 해당 물체 이름의 인식 완료 안내가 나타납니다.
             }
         }
     }
