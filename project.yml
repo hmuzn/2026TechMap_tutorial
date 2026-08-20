@@ -13,20 +13,26 @@ targets:
     platform: visionOS
     sources:
       - path: SpatialObjectDrums
+        excludes:
+          - Resources/Audio/ADD_AUDIO_FILES_HERE.md
+          - Resources/ReferenceObjects/ADD_REFERENCE_OBJECTS_HERE.md
       - path: SpatialObjectDrums.docc
     info:
       path: SpatialObjectDrums/Info.plist
       properties:
         CFBundleDisplayName: Spatial Object Drums
-        NSHandsTrackingUsageDescription: 손가락이 실물 물체를 두드리는 동작을 감지합니다.
-        NSWorldSensingUsageDescription: 등록된 실물 물체의 위치와 크기를 추적합니다.
+        ITSAppUsesNonExemptEncryption: false
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: true
+        NSHandsTrackingUsageDescription: 손가락이 실물 물체를 두드리는 동작을 감지합니다.
+        NSWorldSensingUsageDescription: 등록된 실물 물체의 위치와 크기를 추적합니다.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.SpatialObjectDrums
         PRODUCT_NAME: SpatialObjectDrums
+        CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: NO
+        REFERENCEOBJECT_STRIP_USDZ: YES
         TARGETED_DEVICE_FAMILY: "7"
         SUPPORTS_MACCATALYST: NO
 schemes:
@@ -36,3 +42,5 @@ schemes:
         SpatialObjectDrums: all
     run:
       config: Debug
+      enableGPUFrameCaptureMode: disabled
+      disableGPUValidationMode: true
