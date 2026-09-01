@@ -24,13 +24,11 @@ struct NoiseGenerator {
 
 enum Voice {
     case woodBlock
-    case tom
     case percussionFX
 }
 
 let voices: [(name: String, duration: Double, voice: Voice)] = [
     ("wood-block.wav", 0.18, .woodBlock),
-    ("tom.wav", 0.34, .tom),
     ("percussion-fx.wav", 0.24, .percussionFX),
 ]
 
@@ -50,10 +48,6 @@ for item in voices {
         case .woodBlock:
             let body = sin(2 * .pi * 520 * t) + 0.55 * sin(2 * .pi * 810 * t)
             sample = (body * 0.42 + noise.next() * 0.08) * exp(-25 * t)
-        case .tom:
-            let pitch = 190 - 55 * (1 - exp(-18 * t))
-            let body = sin(2 * .pi * pitch * t) + 0.22 * sin(2 * .pi * pitch * 2 * t)
-            sample = body * 0.62 * exp(-11 * t)
         case .percussionFX:
             let metallic = sin(2 * .pi * 310 * t) + 0.45 * sin(2 * .pi * 1_127 * t)
             sample = (metallic * 0.28 + noise.next() * 0.34) * exp(-17 * t)

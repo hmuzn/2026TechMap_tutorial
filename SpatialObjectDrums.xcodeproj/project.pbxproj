@@ -1,0 +1,366 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		003048E6226685084914B6BE /* SpatialObjectDrums.docc in Sources */ = {isa = PBXBuildFile; fileRef = 84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */; };
+		4A597042635BC3D1F668A8EA /* SpatialObjectDrumsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */; };
+		62D48B8E6AE7A7E21C065E11 /* wood-block.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D68C9BD826B25E03C5BCEBC /* wood-block.wav */; };
+		911E4D8BB2BB404401DED8EB /* DrumProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AD9B7A38377A93C23E3B8F /* DrumProfile.swift */; };
+		9C0F15FF615F00547F7DD8E4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2F4EBEABFD5826621C024 /* ContentView.swift */; };
+		A370D0AF26974F0606CF6F9C /* DrumAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0459251A0F942519CAB83C /* DrumAppModel.swift */; };
+		A97ED4C9E5677AD75DBE4D6D /* TrackedDrum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */; };
+		BE3DD7164D1CFB6A7DA16C99 /* Apple_Magic_Keyboard.referenceobject in Resources */ = {isa = PBXBuildFile; fileRef = C83482A3921642F9BD3F2997 /* Apple_Magic_Keyboard.referenceobject */; };
+		BF9F6CBE21B053D100B995CC /* DrumRealityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9121B3269EDEC9C4D81B3E /* DrumRealityView.swift */; };
+		CE0A554E51348238D5C86E59 /* percussion-fx.wav in Resources */ = {isa = PBXBuildFile; fileRef = B31292B2C73C3410389CC749 /* percussion-fx.wav */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialObjectDrumsApp.swift; sourceTree = "<group>"; };
+		84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SpatialObjectDrums.docc; sourceTree = "<group>"; };
+		8FAE279F00729ECADB381E4F /* SpatialObjectDrums.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SpatialObjectDrums.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D68C9BD826B25E03C5BCEBC /* wood-block.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "wood-block.wav"; sourceTree = "<group>"; };
+		AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedDrum.swift; sourceTree = "<group>"; };
+		B31292B2C73C3410389CC749 /* percussion-fx.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "percussion-fx.wav"; sourceTree = "<group>"; };
+		C83482A3921642F9BD3F2997 /* Apple_Magic_Keyboard.referenceobject */ = {isa = PBXFileReference; path = Apple_Magic_Keyboard.referenceobject; sourceTree = "<group>"; };
+		CD0459251A0F942519CAB83C /* DrumAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrumAppModel.swift; sourceTree = "<group>"; };
+		DF9121B3269EDEC9C4D81B3E /* DrumRealityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrumRealityView.swift; sourceTree = "<group>"; };
+		E13F88F67235617769391A1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E3C2F4EBEABFD5826621C024 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F0AD9B7A38377A93C23E3B8F /* DrumProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrumProfile.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2BABE0F60CA8709EEDFFFDB7 /* ReferenceObjects */ = {
+			isa = PBXGroup;
+			children = (
+				C83482A3921642F9BD3F2997 /* Apple_Magic_Keyboard.referenceobject */,
+			);
+			path = ReferenceObjects;
+			sourceTree = "<group>";
+		};
+		32ACC34D24C8D0CCC5460615 /* SpatialObjectDrums */ = {
+			isa = PBXGroup;
+			children = (
+				E3C2F4EBEABFD5826621C024 /* ContentView.swift */,
+				CD0459251A0F942519CAB83C /* DrumAppModel.swift */,
+				F0AD9B7A38377A93C23E3B8F /* DrumProfile.swift */,
+				DF9121B3269EDEC9C4D81B3E /* DrumRealityView.swift */,
+				E13F88F67235617769391A1D /* Info.plist */,
+				1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */,
+				AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */,
+				5AE91B3D183FEB3AC22C7788 /* Resources */,
+			);
+			path = SpatialObjectDrums;
+			sourceTree = "<group>";
+		};
+		5AE91B3D183FEB3AC22C7788 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8E9E7F5B68DED2A4CE639349 /* Audio */,
+				2BABE0F60CA8709EEDFFFDB7 /* ReferenceObjects */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		80FADDBB83D1B7026DA85486 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8FAE279F00729ECADB381E4F /* SpatialObjectDrums.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8E9E7F5B68DED2A4CE639349 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				B31292B2C73C3410389CC749 /* percussion-fx.wav */,
+				9D68C9BD826B25E03C5BCEBC /* wood-block.wav */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		BADD0426235AD0BFFF97C29A = {
+			isa = PBXGroup;
+			children = (
+				84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */,
+				32ACC34D24C8D0CCC5460615 /* SpatialObjectDrums */,
+				80FADDBB83D1B7026DA85486 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B1FEE215D4E9FF0FB9AA29DB /* SpatialObjectDrums */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9343E01994A03AFA23FEF69 /* Build configuration list for PBXNativeTarget "SpatialObjectDrums" */;
+			buildPhases = (
+				AAA488609BEC6034385B1352 /* Sources */,
+				C1ECFC4C433B35B1C96AECA2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpatialObjectDrums;
+			packageProductDependencies = (
+			);
+			productName = SpatialObjectDrums;
+			productReference = 8FAE279F00729ECADB381E4F /* SpatialObjectDrums.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0EF778CC047ACE1250A232AA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B1FEE215D4E9FF0FB9AA29DB = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = ACC66FE33579FAF769112134 /* Build configuration list for PBXProject "SpatialObjectDrums" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BADD0426235AD0BFFF97C29A;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 80FADDBB83D1B7026DA85486 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B1FEE215D4E9FF0FB9AA29DB /* SpatialObjectDrums */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C1ECFC4C433B35B1C96AECA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE3DD7164D1CFB6A7DA16C99 /* Apple_Magic_Keyboard.referenceobject in Resources */,
+				CE0A554E51348238D5C86E59 /* percussion-fx.wav in Resources */,
+				62D48B8E6AE7A7E21C065E11 /* wood-block.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AAA488609BEC6034385B1352 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C0F15FF615F00547F7DD8E4 /* ContentView.swift in Sources */,
+				A370D0AF26974F0606CF6F9C /* DrumAppModel.swift in Sources */,
+				911E4D8BB2BB404401DED8EB /* DrumProfile.swift in Sources */,
+				BF9F6CBE21B053D100B995CC /* DrumRealityView.swift in Sources */,
+				003048E6226685084914B6BE /* SpatialObjectDrums.docc in Sources */,
+				4A597042635BC3D1F668A8EA /* SpatialObjectDrumsApp.swift in Sources */,
+				A97ED4C9E5677AD75DBE4D6D /* TrackedDrum.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		677A660EDFA4FEA7E4FFF980 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DOCC_HOSTING_BASE_PATH = 2026TechMap_tutorial;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Debug;
+		};
+		6FB1DED850CEF76EF5A06AEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpatialObjectDrums/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SpatialObjectDrums;
+				PRODUCT_NAME = SpatialObjectDrums;
+				REFERENCEOBJECT_STRIP_USDZ = YES;
+				SDKROOT = xros;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Release;
+		};
+		9E329E09D66008F4123C1479 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SpatialObjectDrums/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SpatialObjectDrums;
+				PRODUCT_NAME = SpatialObjectDrums;
+				REFERENCEOBJECT_STRIP_USDZ = YES;
+				SDKROOT = xros;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Debug;
+		};
+		B4D52949F5D39F2A0E9F90B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DOCC_HOSTING_BASE_PATH = 2026TechMap_tutorial;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				XROS_DEPLOYMENT_TARGET = 27.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A9343E01994A03AFA23FEF69 /* Build configuration list for PBXNativeTarget "SpatialObjectDrums" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9E329E09D66008F4123C1479 /* Debug */,
+				6FB1DED850CEF76EF5A06AEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ACC66FE33579FAF769112134 /* Build configuration list for PBXProject "SpatialObjectDrums" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				677A660EDFA4FEA7E4FFF980 /* Debug */,
+				B4D52949F5D39F2A0E9F90B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0EF778CC047ACE1250A232AA /* Project object */;
+}

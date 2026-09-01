@@ -5,34 +5,42 @@ import UIKit
 
 @MainActor
 final class TrackedDrum {
+    private static let feedbackHeight: Float = 0.004
+    private static let strikePlaneOffset: Float = 0.012
+    private static let restingOpacity: Float = 0.42
+    private static let hitOpacity: Float = 0.9
+    private static let minimumHitIntensity: Float = 0.15
+
     let id: UUID
     let displayName: String
     let entity = Entity()
     private let feedback: ModelEntity
-    private let profile: DrumProfile
     private let boundsMin: SIMD3<Float>
     private let boundsMax: SIMD3<Float>
-    private var audio: AudioFileResource?
+    private let hitPlaneY: Float
+    private let audio: AudioFileResource
     private(set) var isTracked = true
 
-    init(anchor: ObjectAnchor) async {
+    init(anchor: ObjectAnchor) async throws {
         id = anchor.id
         boundsMin = anchor.boundingBox.min
         boundsMax = anchor.boundingBox.max
+        hitPlaneY = anchor.boundingBox.max.y + Self.strikePlaneOffset
         let selectedProfile = DrumProfile.forReferenceObject(named: anchor.referenceObject.name)
-        profile = selectedProfile
         displayName = selectedProfile.displayName
 
         let size = boundsMax - boundsMin
+        let center = (boundsMin + boundsMax) / 2
         feedback = ModelEntity(
-            mesh: .generateBox(size: [size.x, 0.004, size.z]),
-            materials: [SimpleMaterial(color: .systemGreen.withAlphaComponent(0.42), isMetallic: false)]
+            mesh: .generateBox(size: [size.x, Self.feedbackHeight, size.z]),
+            materials: [SimpleMaterial(color: .systemGreen, isMetallic: false)]
         )
-        feedback.position.y = anchor.boundingBox.max.y + 0.004
+        feedback.position = [center.x, hitPlaneY, center.z]
+        feedback.components.set(OpacityComponent(opacity: Self.restingOpacity))
         entity.addChild(feedback)
         entity.transform = Transform(matrix: anchor.originFromAnchorTransform)
         entity.spatialAudio = SpatialAudioComponent(gain: -6)
-        audio = try? await AudioFileResource(named: profile.audioResource)
+        audio = try await AudioFileResource(named: selectedProfile.audioResource)
     }
 
     func update(anchor: ObjectAnchor) {
@@ -45,22 +53,29 @@ final class TrackedDrum {
         let inverse = entity.transformMatrix(relativeTo: nil).inverse
         let previous = (inverse * SIMD4<Float>(previousWorld, 1)).xyz
         let current = (inverse * SIMD4<Float>(currentWorld, 1)).xyz
-        let top = boundsMax.y
+        let top = hitPlaneY
         let crossedTop = previous.y > top && current.y <= top
-        let insideXZ = current.x >= boundsMin.x && current.x <= boundsMax.x &&
-            current.z >= boundsMin.z && current.z <= boundsMax.z
-        guard crossedTop, insideXZ else { return nil }
-        return min(max((previous.y - current.y) / 0.04, 0.15), 1)
+        let verticalDistance = previous.y - current.y
+        guard crossedTop, verticalDistance > .ulpOfOne else { return nil }
+        let crossingFraction = (previous.y - top) / verticalDistance
+        let crossing = previous + (current - previous) * crossingFraction
+        let insideXZ = crossing.x >= boundsMin.x && crossing.x <= boundsMax.x &&
+            crossing.z >= boundsMin.z && crossing.z <= boundsMax.z
+        guard insideXZ else { return nil }
+        return min(max(verticalDistance / 0.04, Self.minimumHitIntensity), 1)
     }
 
     func play(intensity: Float) {
-        guard let audio else { return }
-        entity.spatialAudio?.gain = -18 + 18 * Double(intensity)
+        let normalizedIntensity = min(
+            max((intensity - Self.minimumHitIntensity) / (1 - Self.minimumHitIntensity), 0),
+            1
+        )
+        entity.spatialAudio?.gain = -18 + 18 * Double(normalizedIntensity)
         entity.playAudio(audio)
-        feedback.components.set(OpacityComponent(opacity: 0.9))
+        feedback.components.set(OpacityComponent(opacity: Self.hitOpacity))
         Task {
             try? await Task.sleep(for: .milliseconds(90))
-            feedback.components.set(OpacityComponent(opacity: 0.42))
+            feedback.components.set(OpacityComponent(opacity: Self.restingOpacity))
         }
     }
 }

@@ -1,0 +1,80 @@
+name: Validate visionOS 27 App and DocC
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: xcode-27
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Install Apple Magic Keyboard Reference Object
+        run: make install-magic-keyboard
+      - name: Regenerate committed Xcode project
+        run: make project
+      - name: Synchronize DocC code resources
+        run: make sync-docc-code
+      - name: Verify generated DocC resources are committed
+        run: git diff --exit-code
+      - name: Validate repository
+        run: REQUIRE_XCODE_27=1 REQUIRE_REFERENCE_OBJECT=1 make validate
+      - name: Build app
+        run: >-
+          xcodebuild build
+          -project SpatialObjectDrums.xcodeproj
+          -scheme SpatialObjectDrums
+          -destination 'generic/platform=visionOS'
+          -derivedDataPath DerivedData
+          CODE_SIGNING_ALLOWED=NO
+      - name: Build documentation
+        run: >-
+          xcodebuild docbuild
+          -project SpatialObjectDrums.xcodeproj
+          -scheme SpatialObjectDrums
+          -destination 'generic/platform=visionOS'
+          -derivedDataPath DerivedData
+          DOCC_HOSTING_BASE_PATH=2026TechMap_tutorial
+          CODE_SIGNING_ALLOWED=NO
+      - name: Synchronize tutorial STEP selection with page scrolling
+        run: >-
+          ./Scripts/patch_docc_tutorial_step_sync.py
+          DerivedData/Build/Products/Debug-xros/SpatialObjectDrums.doccarchive
+      - name: Verify tutorial STEP synchronization patch
+        run: >-
+          ./Scripts/patch_docc_tutorial_step_sync.py
+          DerivedData/Build/Products/Debug-xros/SpatialObjectDrums.doccarchive
+          --check
+      - name: Add desktop STEP highlight scrolling
+        run: >-
+          ./Scripts/inject_docc_step_highlight_scroll.py
+          DerivedData/Build/Products/Debug-xros/SpatialObjectDrums.doccarchive
+          --expected-base-url /2026TechMap_tutorial/
+      - name: Verify desktop STEP highlight helper
+        run: >-
+          ./Scripts/inject_docc_step_highlight_scroll.py
+          DerivedData/Build/Products/Debug-xros/SpatialObjectDrums.doccarchive
+          --check
+          --expected-base-url /2026TechMap_tutorial/
+      - name: Package rendered DocC archive
+        run: >-
+          ditto -c -k --keepParent
+          DerivedData/Build/Products/Debug-xros/SpatialObjectDrums.doccarchive
+          SpatialObjectDrums.doccarchive.zip
+      - name: Upload rendered DocC archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: SpatialObjectDrums-DocC
+          path: SpatialObjectDrums.doccarchive.zip
+          if-no-files-found: error
+          retention-days: 30

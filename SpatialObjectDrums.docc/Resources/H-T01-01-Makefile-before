@@ -1,0 +1,19 @@
+.PHONY: project clean install-magic-keyboard train-reference preview-docc sync-docc-code validate
+
+
+
+
+clean:
+	rm -rf SpatialObjectDrums.xcodeproj .build DerivedData
+
+install-magic-keyboard:
+	./Scripts/install_magic_keyboard_referenceobject.sh
+
+train-reference:
+	./Scripts/train_reference_object.sh --help
+
+
+
+
+sync-docc-code:
+	./Scripts/generate_docc_highlights.py

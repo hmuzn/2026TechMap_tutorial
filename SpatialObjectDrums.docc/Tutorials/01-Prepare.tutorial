@@ -1,114 +1,241 @@
-@Tutorial(time: 35) {
-    @Intro(title: "프로젝트와 참조 물체 준비하기") {
-        저장소에 포함된 iPhone 17 Black 모델이나 Apple 공식 Magic Keyboard `.referenceobject`를 준비하고, Mixed Immersive Space를 여는 앱의 골격을 구성합니다.
+@Tutorial(time: 70) {
+    @Intro(title: "Xcode 27 프로젝트와 Reference Object 준비하기") {
+        Xcode 27과 visionOS 27을 기준으로 프로젝트를 만들고, Apple 공식 샘플의 Magic Keyboard Reference Object를 설치해 첫 Object Tracking 실행을 준비합니다. 자신의 물체를 추적하려는 경우에는 별도의 확장 경로에서 USDZ를 점검하고 Create ML로 새 `.referenceobject`를 학습합니다.
     }
 
-    @Section(title: "개발 환경과 물체 선정") {
+    @Section(title: "visionOS 27 실습 환경 확인") {
         @ContentAndMedia {
-            이 프로젝트는 Xcode 16 이상, visionOS 2 이상, Apple Vision Pro 실기기가 필요합니다. Simulator에서는 화면과 일반 RealityKit 콘텐츠를 확인할 수 있지만 Object Tracking 결과를 검증할 수 없습니다.
+            이 튜토리얼은 Xcode 27, visionOS 27 SDK와 Apple Vision Pro 실기기를 사용하는 단일 버전 경로입니다. Apple의 최신 Object Tracking 샘플과 같은 도구 체인으로 실습하며, 다른 Xcode 또는 visionOS 버전으로 되돌리는 과정은 다루지 않습니다.
 
-            Object Tracking은 주변의 모든 물체를 자동으로 분류하지 않습니다. 앱에 포함한 참조 물체와 일치하는 실물을 찾아 위치와 자세를 알려주는 기능입니다.
+            작성 시점의 Xcode 27과 visionOS 27은 Apple이 베타 소프트웨어로 제공하고 있습니다. 화면 이름이나 API가 바뀔 수 있으므로 사용한 Xcode와 visionOS 빌드 번호, 검증 날짜를 실습 기록에 남기고 정식 운영체제가 배포되면 실기기에서 다시 검증하세요.
 
-            완성된 예제에는 케이스를 벗긴 검은색 iPhone 17용 Reference Object가 포함되어 있습니다. Magic Keyboard는 Apple 공식 샘플에서 검증된 파일을 내려받아 추가할 수 있으므로 어느 쪽도 직접 Create ML 학습을 기다릴 필요가 없습니다.
+            Object Tracking은 일반 카메라 물체 분류가 아닙니다. `.referenceobject`를 학습할 때 사용한 3D 외형, 크기와 표면 특징에 대응하는 실물을 찾아 위치와 자세를 갱신합니다. 케이스, 커버, 케이블이나 받침대가 외형을 크게 바꾸면 인식이 어려울 수 있습니다.
+
+            이 장의 기본 실습 대상은 Apple의 [Exploring object tracking with ARKit](https://developer.apple.com/documentation/visionos/exploring_object_tracking_with_arkit) 샘플에 포함된 Apple Magic Keyboard입니다. Apple 문서는 정확한 키보드 세대, 치수, 숫자 키패드 유무를 밝히지 않으므로 특정 제품 규격을 단정하지 않습니다. 공식 사전학습 파일로 자신의 키보드가 인식되지 않으면 다른 세대도 지원한다고 가정하지 말고, 뒤의 **자체 물체 확장 경로**에서 해당 실물에 맞는 Reference Object를 만드세요.
+
+            @Image(source: "spatial-object-drums-hero-v2.png", alt: "실물 Magic Keyboard를 둘러싼 Object Tracking 경계와 키보드 위 가상 타격 영역을 양손 검지로 연주하는 모습")
         }
 
         @Steps {
             @Step {
-                테이블 주변을 비우고, 깨지지 않으며 쉽게 움직이지 않는 물체를 준비합니다. Vision Pro를 착용한 상태에서 빠르게 손을 휘두르지 마세요.
+                Xcode 27을 실행할 수 있는 Apple Silicon Mac에 Xcode 27을 설치하고 `xcode-select -p`가 사용할 Xcode 27의 `Contents/Developer`를 가리키는지 확인합니다. 여러 Xcode를 설치했다면 이 프로젝트를 빌드하고 Reference Object를 검사할 때 모두 같은 Xcode 27을 사용하세요.
+
+                @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
             }
             @Step {
-                기본 예제를 실행할 때는 케이스를 벗긴 검은색 iPhone 17 또는 약 27.9 × 11.5cm 크기의 컴팩트 Apple Magic Keyboard를 준비합니다. 숫자 키패드가 붙은 큰 키보드는 샘플 모델과 크기가 다릅니다.
+                Apple Vision Pro를 visionOS 27로 업데이트하고 Xcode의 Devices and Simulators에서 무선 또는 Developer Strap으로 페어링합니다. Object Tracking은 visionOS Simulator에서 동작하지 않으므로 Simulator 결과를 실물 인식 검증으로 사용하지 않습니다.
+
+                @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
             }
             @Step {
-                각 물체의 가로·세로·높이를 미터 단위로 측정하고 위쪽과 앞쪽 방향을 표시합니다. 이후 3D 모델의 축과 실제 물체의 방향이 같아야 합니다.
+                첫 실행은 Apple 공식 사전학습 Magic Keyboard 경로로 진행합니다. 이 경로에서는 Create ML 학습을 기다리지 않고, 공식 샘플에서 Reference Object를 설치해 프로젝트와 권한 흐름부터 확인합니다.
+
+                @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
+            }
+            @Step {
+                컵, 공구나 직접 제작한 물체를 추적하려면 먼저 Magic Keyboard 경로로 앱 실행을 확인한 뒤 자체 물체 확장 경로를 진행합니다. 두 경로의 `.referenceobject`를 서로 대신 사용할 수 있다고 가정하지 마세요.
+
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
         }
     }
 
-    @Section(title: "Apple Magic Keyboard 모델 내려받기") {
+    @Section(title: "프로젝트 생성과 버전 고정") {
         @ContentAndMedia {
-            Apple의 [Exploring object tracking with ARKit](https://developer.apple.com/documentation/visionos/exploring_object_tracking_with_arkit) 샘플에는 `Apple_Magic_Keyboard.referenceobject`가 포함되어 있습니다. 이 저장소는 Apple 바이너리를 재배포하지 않고 공식 Apple 서버에서 직접 내려받는 설치 스크립트를 제공합니다.
+            저장소에는 바로 열 수 있는 `SpatialObjectDrums.xcodeproj`가 포함되어 있습니다. Make 대상은 프로젝트 재생성, Apple 샘플 설치, 자체 물체 학습, DocC 미리보기와 검증 순서를 한곳에 모읍니다. Xcode 프로젝트 파일을 손으로 수정하지 않고 `project.yml`을 기준으로 다시 생성하면 Reference Object와 DocC 리소스의 Target Membership을 반복해서 확인할 수 있습니다.
 
-            현재 Apple 문서의 Download는 Xcode 27·visionOS 27용 Reference Object 포맷 2.0입니다. Xcode 16~26에서는 읽을 수 없으므로 설치 스크립트는 Apple이 계속 호스팅하는 2024년 Xcode 16·visionOS 2용 포맷 1.0 아카이브를 사용합니다.
+            @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
         }
 
         @Steps {
             @Step {
-                프로젝트 루트에서 `make install-magic-keyboard`를 실행합니다. 스크립트가 Apple 공식 ZIP을 다운로드하고 Apple이 공개한 SHA-512 체크섬을 검사합니다.
+                커밋된 Xcode 프로젝트를 바로 열거나, `project.yml`을 수정한 경우 프로젝트 루트에서 `make project`를 실행해 다시 생성합니다. `make validate`는 필수 소스·권한 설명·코드 강조 자료와 Reference Object 도구를 확인합니다. Xcode 27이 선택되지 않았거나 Magic Keyboard 파일이 아직 없으면 검증 로그에 명확한 안내가 표시됩니다. DocC 내용만 빠르게 확인할 때는 `make preview-docc`로 로컬 미리보기 서버를 시작할 수 있습니다.
+
+                @Code(name: "Makefile", file: "H-T01-01-Makefile-final", previousFile: "H-T01-01-Makefile-before")
             }
             @Step {
-                스크립트는 현재 Xcode의 `referenceobjectc`로 파일 호환성을 검사합니다. 최신 포맷을 구형 Xcode에서 잘못 사용하면 나타나는 `Unsupported version 2.0` 문제를 설치 전에 차단합니다.
+                `project.yml`에서 deployment target이 visionOS 27로 고정되어 있고, `SpatialObjectDrums`, `SpatialObjectDrums.docc`와 `Resources/ReferenceObjects`가 앱 Target에 포함되는지 확인합니다. `REFERENCEOBJECT_STRIP_USDZ` 설정은 앱에서 학습용 USDZ를 런타임에 읽는지 여부와 함께 결정해야 합니다.
+
+                @Code(name: "project.yml", file: "H-T01-02-project-final.yml", previousFile: "H-T01-02-project-before.yml")
             }
             @Step {
-                검증된 파일을 `SpatialObjectDrums/Resources/ReferenceObjects/Apple_Magic_Keyboard.referenceobject`에 복사하고 XcodeGen으로 프로젝트를 다시 생성합니다.
-            }
-            @Step {
-                이 파일은 Apple 샘플의 `LICENSE.txt` 적용을 받습니다. 숫자 키패드 모델처럼 외형이나 크기가 다른 Magic Keyboard는 별도의 Reference Object를 만들어야 합니다.
+                `SpatialObjectDrums.xcodeproj`를 열고 Signing Team과 Apple Vision Pro 실행 대상을 선택합니다. 아직 Start 버튼을 누르지 말고 앱 창이 빌드되어 열리는지만 확인합니다.
+
+                @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
             }
         }
     }
 
-    @Section(title: "Reference Object 생성") {
+    @Section(title: "기본 경로: Apple Magic Keyboard 설치") {
         @ContentAndMedia {
-            USDZ는 물체의 3D 외형을 담는 모델 파일이고, `.referenceobject`는 Create ML이 USDZ를 기반으로 학습해 ARKit이 인식에 사용하는 결과물입니다. 이 저장소에는 완성된 `iPhone17Black.referenceobject`와 선택적으로 다시 학습할 때 사용할 저폴리 USDZ가 함께 들어 있습니다.
+            Apple 최신 샘플에는 Magic Keyboard를 위한 사전학습 `.referenceobject`가 포함되어 있습니다. 저장소는 Apple 파일을 재배포하지 않고 공식 샘플을 내려받아 체크섬, 아카이브 멤버와 Xcode 27 `referenceobjectc` 호환성을 검사한 뒤 앱 리소스 폴더에 설치합니다.
+
+            이 경로는 Create ML 프로젝트를 새로 만들지 않습니다. 실습 대상과 Reference Object가 이미 준비되어 있으므로 설치가 끝나면 권한과 Immersive Space 흐름으로 바로 이동할 수 있습니다.
+
+            @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
         }
 
         @Steps {
             @Step {
-                Object Capture 또는 다른 3D 스캔 방식으로 물체의 실제 크기를 반영한 USDZ를 만듭니다. 반사와 그림자를 줄이고 모든 면을 충분히 촬영합니다.
+                프로젝트 루트에서 `make install-magic-keyboard`를 실행합니다. 스크립트가 Apple 공식 샘플 아카이브를 내려받고, 예상한 파일인지 확인한 다음 임시 폴더에서 압축을 풉니다.
+
+                @Code(name: "install_magic_keyboard_referenceobject.sh", file: "H-T01-03-install-magic-keyboard-final.sh", previousFile: "H-T01-03-install-magic-keyboard-before.sh")
             }
             @Step {
-                Reality Composer Pro에서 원점, 실제 치수, +Y 위쪽 방향을 확인합니다. 모델 크기가 실제 물체와 다르면 먼저 수정합니다.
+                설치 결과가 `SpatialObjectDrums/Resources/ReferenceObjects/Apple_Magic_Keyboard.referenceobject`에 있는지 확인합니다. 파일 이름을 바꾸면 앱의 프로필 이름 연결도 함께 바꿔야 하므로 기본 실습에서는 그대로 유지합니다.
+
+                @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
             }
             @Step {
-                기본 iPhone 모델은 그대로 사용합니다. 자신의 물체로 바꿀 때만 Create ML의 Object Tracking 템플릿에 USDZ를 넣어 학습하고 `.referenceobject`로 내보냅니다.
+                설치 스크립트가 Xcode 27의 `referenceobjectc`로 파일을 컴파일할 수 있는지 검사했는지 로그에서 확인합니다. 이 검사는 파일이 존재하는지만 보는 것이 아니라 현재 도구 체인이 Reference Object를 읽고 앱에 넣을 수 있는지를 확인합니다.
+
+                @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
             }
             @Step {
-                결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 추가하고 Target Membership을 켭니다. 기본 파일 이름은 `iPhone17Black.referenceobject`입니다.
+                설치가 끝나면 Xcode의 File Inspector에서 `Apple_Magic_Keyboard.referenceobject`의 SpatialObjectDrums Target Membership이 켜져 있는지 확인합니다. 커밋된 프로젝트에는 이 리소스 경로가 이미 들어 있으며, `project.yml`을 수정했다면 `make project`로 다시 생성합니다. `.xcodeproj`만 수동으로 고치지 않습니다.
+
+                @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
             }
             @Step {
-                경로에 공백이 있으면 일부 Create ML 버전이 `%20` 폴더를 만들 수 있습니다. 포함된 `train_iphone17.sh`는 공백 없는 임시 경로에서 학습한 뒤 결과를 올바른 위치로 복사합니다.
+                외형을 임의로 추정해 키보드를 구매하거나 문서에 특정 치수를 적지 마세요. Apple 공식 파일이 준비되었더라도 물리적으로 대응하지 않는 Magic Keyboard는 인식되지 않을 수 있습니다. 이 경우 다음 확장 경로에서 실제 키보드 또는 다른 물체를 직접 학습합니다.
+
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
         }
     }
 
-    @Section(title: "Mixed Immersive Space 열기") {
+    @Section(title: "확장 경로: 자신의 Reference Object 학습") {
         @ContentAndMedia {
-            창에서는 시작과 오류 상태를 보여주고, 실제 추적은 Mixed Immersive Space 안의 `RealityView`에서 수행합니다. Mixed 스타일을 사용하면 주변 실물을 보면서 가상 피드백을 겹칠 수 있습니다.
+            자체 물체 경로는 **USDZ 준비 → 실물 치수·축·재질 확인 → Create ML Object Tracking 템플릿 → viewing angle과 training mode 선택 → export → Target Membership → `referenceobjectc` 검증** 순서로 진행합니다. 앞 단계가 틀리면 뒤에서 코드를 수정해도 추적 정렬이 맞지 않으므로 순서를 건너뛰지 마세요.
+
+            USDZ는 물체의 3D 디지털 트윈이고 `.referenceobject`는 Create ML이 USDZ를 바탕으로 학습한 ARKit용 결과물입니다. 앱은 USDZ 자체를 Object Tracking 대상으로 사용하지 않습니다.
+
+            @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ를 Create ML로 학습해 referenceobject를 만들고 Xcode와 ARKit에서 검증하는 흐름")
         }
 
         @Steps {
             @Step {
-                visionOS App 프로젝트에 `SpatialObjectDrums.docc` 카탈로그를 추가합니다. Deployment Target은 visionOS 2.0 이상으로 설정합니다.
+                **1. USDZ를 준비합니다.** 형태가 변하지 않는 단단한 물체를 고르고 Object Capture, CAD 또는 3D 제작 도구로 실제 물체와 닮은 USDZ를 만듭니다. 모든 면에서 구분되는 비대칭 특징과 표면 무늬가 있는 물체가 좋습니다. 투명하거나 반사가 강한 부분은 스캔만으로 형태와 재질이 무너지기 쉬우므로 CAD 형상과 PBR 재질을 보완합니다.
+
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
             @Step {
-                Target의 Signing & Capabilities에서 World Sensing을 추가하고 `Info.plist`에 손 추적과 주변 공간 접근 목적을 작성합니다. Immersive Space를 별도 Scene으로 열 수 있도록 다중 Scene 지원도 활성화합니다.
+                **2. 실물 치수를 확인합니다.** 실물의 가로·세로·높이를 직접 재고 USDZ 뷰어에 표시되는 단위와 절대 치수를 비교합니다. 모델이 실제보다 크거나 작으면 가상 콘텐츠가 시선 방향으로 앞뒤에 떠 보일 수 있습니다. 케이스나 분리 가능한 받침대를 학습 모델에 포함했다면 실행할 때도 같은 상태를 유지합니다.
 
-                @Code(name: "Info.plist", file: "Info.plist")
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
             @Step {
-                앱 진입점에 WindowGroup과 `DrumSpace`라는 Mixed Immersive Space를 선언합니다.
+                **3. 축과 앞면을 확인합니다.** Reality Composer Pro에서 +Y가 위쪽을 가리키는지, Create ML이 보여주는 front 방향이 사람이 실제로 바라볼 앞면과 일치하는지 확인합니다. Upright나 Front viewing angle을 사용할 모델이 눕거나 뒤집혀 있으면 Reality Composer Pro에서 방향을 고친 새 USDZ를 내보냅니다.
 
-                @Code(name: "SpatialObjectDrumsApp.swift", file: "SpatialObjectDrumsApp.swift")
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
             @Step {
-                시작 버튼은 Reference Object를 먼저 검사하고 Immersive Space를 엽니다. 중복 입력을 차단하고 전환이 응답하지 않으면 12초 후 해결 방법을 표시합니다.
+                **4. 재질과 텍스처를 확인합니다.** 단색 임시 재질 대신 실제 색, 패턴, 로고와 표면 차이가 반영되었는지 여러 각도에서 비교합니다. Create ML이 특징으로 사용할 외형이 실제 물체와 다르면 기하가 맞아도 인식률이 떨어집니다.
 
-                @Code(name: "ContentView.swift", file: "ContentView.swift")
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
+            }
+            @Step {
+                **5. Create ML Object Tracking 프로젝트를 만듭니다.** Xcode에서 **Xcode > Open Developer Tool > Create ML**을 선택하고 새 프로젝트의 **Spatial > Object Tracking** 템플릿을 엽니다. Model Sources에 USDZ를 드래그하고 3D 뷰포트의 외형과 표시 치수를 마지막으로 확인합니다.
+
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
+            }
+            @Step {
+                **6. Viewing Angles를 고릅니다.** 물체를 모든 방향으로 돌려 볼 때만 **All Angles**, 바닥에 세워 두고 밑면을 볼 필요가 없을 때 **Upright**, 뒤와 밑면을 볼 필요가 없는 고정 장비일 때 **Front**를 선택합니다. 필요 없는 각도를 제외할수록 해당 사용 자세에 집중해 학습할 수 있습니다. 비슷한 물체와 혼동된다면 **Objects to Avoid**에 그 물체의 USDZ를 추가합니다.
+
+                @Image(source: "tracking-options-decision.png", alt: "정지한 Magic Keyboard의 기본 추적과 빠르게 움직이는 물체의 고주파 추적을 비교하는 개념 이미지")
+            }
+            @Step {
+                **7. Training Mode를 선택합니다.** **Standard**는 대부분의 용도에 맞는 기본 모드이며 모델이 가볍고 프레임당 비용이 낮습니다. **Extended**는 더 많은 학습 데이터와 큰 모델을 사용해 가장 높은 추적 품질을 목표로 하지만 학습 시간이 몇 배 길어질 수 있습니다. 손에 들거나 계속 움직여 high-frame-rate tracking을 사용하는 물체에는 Extended를 권장하고, 정지 물체에서는 같은 조명·거리·가림 조건으로 두 결과를 비교해 실제 개선이 있을 때 선택합니다.
+
+                @Image(source: "tracking-options-decision.png", alt: "정지한 Magic Keyboard의 기본 추적과 빠르게 움직이는 물체의 고주파 추적을 비교하는 개념 이미지")
+            }
+            @Step {
+                **8. 학습하고 내보냅니다.** Mac을 전원에 연결하고 **Train**을 누릅니다. 완료되면 **Output** 탭에서 공백이 없는 구분 가능한 이름으로 `.referenceobject`를 내보냅니다. 원본 USDZ, Create ML 프로젝트, viewing angle, training mode와 실물 사진을 함께 보관해 나중에 같은 결과를 재현할 수 있게 합니다.
+
+                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
+            }
+            @Step {
+                **9. Target Membership을 설정합니다.** 결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 복사하고 `make project`를 실행합니다. Xcode File Inspector에서 SpatialObjectDrums Target Membership이 켜져 있는지 확인합니다. 같은 이름의 이전 파일을 교체했다면 Clean Build Folder 후 다시 설치합니다.
+
+                @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
+            }
+            @Step {
+                **10. `referenceobjectc`로 검증합니다.** `make validate`를 실행해 Xcode 27의 Reference Object Compiler가 새 파일을 임시 출력 폴더로 컴파일하는지 확인합니다. 명령이 성공 코드로 끝나고 컴파일된 출력 파일까지 만들어져야 검증을 통과한 것입니다. 오류가 나면 앱에서 시험하기 전에 export가 끝난 파일인지, Xcode 27을 선택했는지, 파일이 손상되지 않았는지부터 해결합니다.
+
+                @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
+            }
+            @Step {
+                같은 학습을 반복하거나 여러 물체를 자동화하려면 먼저 `./Scripts/train_reference_object.sh --help`로 인자를 확인합니다. 예를 들어 Upright와 Standard로 시작할 때는 `./Scripts/train_reference_object.sh --source "$PWD/TrainingAssets/MyObject.usdz" --output "$PWD/SpatialObjectDrums/Resources/ReferenceObjects/MyObject.referenceobject" --viewing-angle upright --mode standard`처럼 USDZ와 출력 경로를 모두 명시합니다. 비슷한 물체 하나를 negative example로 넣을 때는 `--avoid /path/to/SimilarObject.usdz`를 추가합니다. 스크립트는 Create ML 학습 결과를 설치하고 `referenceobjectc` 검증이 성공한 경우에만 앱 리소스로 확정합니다.
+
+                @Code(name: "train_reference_object.sh", file: "H-T01-04-train-reference-object-final.sh", previousFile: "H-T01-04-train-reference-object-before.sh")
             }
         }
     }
 
-    @Section(title: "첫 실행 점검") {
+    @Section(title: "권한 설명과 Immersive Space 구성") {
+        @ContentAndMedia {
+            권한 설명을 프로젝트에 추가하는 것과 시스템 권한 요청을 실제로 시작하는 것은 다른 단계입니다. `Info.plist`의 문자열은 시스템 대화상자에 이유를 보여줄 뿐, 앱 창이 열렸을 때 자동으로 권한을 요청하지 않습니다.
+
+            이 앱은 창에서 **Start Drumming**을 누르면 Reference Object를 확인하고 Mixed Immersive Space를 엽니다. `DrumRealityView`가 나타난 뒤 다음 장에서 구성하는 `ARKitSession.run([objectTrackingProvider, handTrackingProvider])`이 실행될 때 World Sensing과 Hands Tracking 권한이 요청됩니다. 시스템이 두 대화상자를 보여주는 순서는 고정되어 있다고 가정하지 않습니다.
+
+            @Image(source: "tracking-session-lifecycle-v2.png", alt: "하나의 ARKit 세션에서 Magic Keyboard와 양손을 함께 추적해 타격면으로 연결하고 종료 시 초기화하는 흐름의 개념 이미지")
+        }
+
         @Steps {
             @Step {
-                Signing Team과 Apple Vision Pro 실행 대상을 선택한 뒤 빌드합니다.
+                Target의 Signing & Capabilities에서 **World Sensing**과 **Hands Tracking**을 추가합니다. `Info.plist`에는 등록된 실물 물체를 추적하는 이유와 검지 끝 위치를 읽는 이유를 사용자가 이해할 수 있게 각각 작성합니다.
+
+                @Code(name: "Info.plist", file: "H-T01-05-Info-final.plist", previousFile: "H-T01-05-Info-before.plist")
             }
             @Step {
-                앱을 처음 실행할 때 손 추적과 주변 공간 접근 요청을 허용합니다.
+                앱 진입점에 WindowGroup과 `DrumSpace` Mixed Immersive Space를 선언합니다. Immersive Space의 실제 등장과 사라짐을 앱 상태의 기준으로 삼아 시스템 경로로 공간이 닫혀도 Start 버튼 상태가 어긋나지 않게 합니다.
+
+                @Code(name: "SpatialObjectDrumsApp.swift", file: "H-T01-06-SpatialObjectDrumsApp-final.swift", previousFile: "H-T01-06-SpatialObjectDrumsApp-before.swift")
             }
             @Step {
-                Start Drumming 버튼을 눌렀을 때 주변 공간을 유지한 Mixed Immersive Space가 열리는지 확인합니다. iPhone 또는 설치한 Magic Keyboard를 비추면 초록색 타격 영역과 해당 물체 이름의 인식 완료 안내가 나타납니다.
+                ContentView의 Start 버튼은 중복 입력을 막고 Reference Object 준비 상태를 확인한 뒤 `openImmersiveSpace`만 요청합니다. 이 시점에 별도의 Hand Tracking 또는 Object Tracking session을 먼저 실행하지 않습니다. 공간을 열 수 없거나 사용자가 취소하면 창 안에서 다시 시도할 수 있는 메시지를 표시합니다.
+
+                @Code(name: "ContentView.swift", file: "H-T01-07-ContentView-final.swift", previousFile: "H-T01-07-ContentView-before.swift")
+            }
+            @Step {
+                Stop 버튼은 Immersive Space를 닫고 실행 중인 ARKit session과 provider를 정리합니다. 다시 Start할 때는 중지된 provider를 재사용하지 않고 Immersive Space 안에서 새 provider로 session을 시작합니다.
+
+                @Image(source: "tracking-session-lifecycle-v2.png", alt: "하나의 ARKit 세션에서 Magic Keyboard와 양손을 함께 추적해 타격면으로 연결하고 종료 시 초기화하는 흐름의 개념 이미지")
+            }
+        }
+    }
+
+    @Section(title: "Magic Keyboard로 첫 실행 점검") {
+        @Steps {
+            @Step {
+                `make validate`가 성공하고 `Apple_Magic_Keyboard.referenceobject`의 Target Membership이 켜져 있는지 확인합니다. Xcode에서 Signing Team과 visionOS 27 Apple Vision Pro 실행 대상을 선택해 앱을 설치합니다.
+
+                @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
+            }
+            @Step {
+                앱 창이 열렸을 때 권한 대화상자가 아직 나타나지 않는지 확인합니다. 이 앱의 실제 요청 시점은 Start 버튼으로 Immersive Space에 진입하고 그 안에서 `session.run`을 호출할 때입니다.
+
+                @Image(source: "tracking-session-lifecycle-v2.png", alt: "하나의 ARKit 세션에서 Magic Keyboard와 양손을 함께 추적해 타격면으로 연결하고 종료 시 초기화하는 흐름의 개념 이미지")
+            }
+            @Step {
+                Magic Keyboard를 밝고 정돈된 테이블에 놓고 케이블이나 손으로 외형을 가리지 않습니다. **Start Drumming**을 누르고 Mixed Immersive Space가 열린 뒤 시스템이 요청하는 World Sensing과 Hands Tracking 권한을 허용합니다.
+
+                @Image(source: "spatial-object-drums-hero-v2.png", alt: "Magic Keyboard 위 가상 타격 영역을 양손 검지로 연주하는 목표 동작의 개념 이미지")
+            }
+            @Step {
+                키보드의 윗면과 옆면이 보이도록 천천히 바라봅니다. 공식 사전학습 파일과 대응하는 실물이 인식되면 상태 문구에 Magic Keyboard 이름이 표시되고 추적 위치에 가상 타격 영역이 나타납니다.
+
+                @Image(source: "spatial-object-drums-hero-v2.png", alt: "Magic Keyboard 위 가상 타격 영역을 양손 검지로 연주하는 목표 동작의 개념 이미지")
+            }
+            @Step {
+                인식되지 않으면 키보드 세대나 치수를 추측해 코드를 보정하지 마세요. 먼저 조명, 가림, Target Membership과 권한을 확인하고, 외형이 공식 샘플 대상과 다른 것으로 보이면 자신의 키보드 USDZ로 별도의 Reference Object를 학습합니다.
+
+                @Image(source: "object-tracking-recovery.png", alt: "Magic Keyboard가 정상 추적되고 가림으로 일시 중단된 뒤 같은 위치에서 다시 추적되는 세 단계의 개념 이미지")
+            }
+            @Step {
+                권한을 거부한 경우 앱이 종료되지 않고 오류 메시지를 표시하며 창에서 다시 시작할 수 있는 상태를 유지하는지 확인합니다. 다음 장에서는 두 provider를 하나의 ARKitSession에서 시작하고 anchor update를 처리합니다.
+
+                @Image(source: "object-tracking-recovery.png", alt: "Magic Keyboard가 정상 추적되고 가림으로 일시 중단된 뒤 같은 위치에서 다시 추적되는 세 단계의 개념 이미지")
             }
         }
     }

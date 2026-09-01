@@ -13,13 +13,13 @@ struct ContentView: View {
                 .font(.system(size: 72))
                 .foregroundStyle(.orange)
             Text("Spatial Object Drums").font(.largeTitle.bold())
-            Text("iPhone 17 또는 Apple Magic Keyboard를 평평한 테이블에 놓으세요.")
+            Text("Apple 샘플과 대응하는 Magic Keyboard를 평평한 테이블에 놓으세요.")
                 .multilineTextAlignment(.center)
-            Label("인식된 물체 위의 초록색 영역을 손가락으로 가볍게 내려치세요.", systemImage: "hand.tap")
+            Label("키보드 위의 초록색 가상 타격면을 손가락으로 통과하세요.", systemImage: "hand.tap")
                 .foregroundStyle(.secondary)
             Label("Apple Vision Pro 실기기와 정리된 주변 공간이 필요합니다.", systemImage: "visionpro")
                 .foregroundStyle(.secondary)
-            Label("인식되면 물체 위와 몰입 화면 상단에 초록색 표시가 나타납니다.", systemImage: "viewfinder")
+            Label("인식되면 키보드 위와 몰입 화면 상단에 초록색 표시가 나타납니다.", systemImage: "viewfinder")
                 .foregroundStyle(.secondary)
 
             if let message = model.errorMessage {

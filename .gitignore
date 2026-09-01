@@ -1,9 +1,10 @@
 .DS_Store
 .build/
+.docc-build/
 DerivedData/
 *.xcuserstate
 xcuserdata/
-*.xcodeproj/
 outputs/
 work/
+__pycache__/
 SpatialObjectDrums/Resources/ReferenceObjects/Apple_Magic_Keyboard.referenceobject

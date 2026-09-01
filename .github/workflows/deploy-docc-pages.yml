@@ -1,0 +1,53 @@
+name: Deploy DocC to GitHub Pages
+
+on:
+  workflow_run:
+    workflows:
+      - Validate visionOS 27 App and DocC
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download validated DocC archive
+        uses: actions/download-artifact@v8
+        with:
+          name: SpatialObjectDrums-DocC
+          path: downloaded-docc
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+      - name: Extract DocC site
+        run: unzip -q downloaded-docc/SpatialObjectDrums.doccarchive.zip -d pages-site
+      - name: Reject non-web training assets
+        run: |
+          if find pages-site -type f \( -name '*.referenceobject' -o -name '*.usdz' \) -print -quit | grep -q .; then
+            echo "Pages artifact must not contain Reference Object or USDZ training assets." >&2
+            exit 1
+          fi
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: pages-site/SpatialObjectDrums.doccarchive
+      - name: Deploy DocC site
+        id: deployment
+        uses: actions/deploy-pages@v5

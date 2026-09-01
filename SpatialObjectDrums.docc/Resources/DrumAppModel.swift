@@ -93,17 +93,23 @@ final class DrumAppModel {
 
             async let objects: Void = consumeObjectUpdates(from: objectProvider, root: root, runID: runID)
             async let hands: Void = consumeHandUpdates(from: handTracking, runID: runID)
-            _ = await (objects, hands)
-            if activeRunID == runID {
+            async let events: Void = consumeSessionEvents(from: session, runID: runID)
+            _ = await (objects, hands, events)
+            if activeRunID == runID, self.session === session {
                 resetTrackingSession()
+                clearTrackingContent()
+                status = "추적 데이터가 종료되었습니다."
+                errorMessage = "ARKit 데이터 스트림이 예기치 않게 종료되었습니다. 공간을 닫고 재시도하세요."
             }
         } catch is CancellationError {
             guard activeRunID == runID else { return }
             resetTrackingSession()
+            clearTrackingContent()
             status = "추적이 중지되었습니다."
         } catch {
             guard activeRunID == runID else { return }
             resetTrackingSession()
+            clearTrackingContent()
             status = "추적을 시작하지 못했습니다."
             errorMessage = error.localizedDescription
         }
@@ -113,13 +119,17 @@ final class DrumAppModel {
         activeRunID = nil
         isRunning = false
         resetTrackingSession()
+        clearTrackingContent()
+        isImmersiveSpaceOpen = false
+        status = "참조 물체를 찾는 중…"
+    }
+
+    private func clearTrackingContent() {
         trackedDrums.values.forEach { $0.entity.removeFromParent() }
         trackedDrums.removeAll()
         trackedObjectCount = 0
         previousTips.removeAll()
         lastHitAt.removeAll()
-        isImmersiveSpaceOpen = false
-        status = "참조 물체를 찾는 중…"
     }
 
     private func resetTrackingSession() {
@@ -145,10 +155,15 @@ final class DrumAppModel {
             $0.lastPathComponent < $1.lastPathComponent
         }
 
-        return try await withThrowingTaskGroup(of: ReferenceObject.self) { group in
-            for url in urls { group.addTask { try await ReferenceObject(from: url) } }
-            return try await group.reduce(into: []) { $0.append($1) }
+        var references: [ReferenceObject] = []
+        for url in urls {
+            var configuration = ReferenceObject.Configuration()
+            configuration.highFrameRateTrackingEnabled = false
+            references.append(
+                try await ReferenceObject(from: url, configuration: configuration)
+            )
         }
+        return references
     }
 
     private func consumeObjectUpdates(
@@ -162,20 +177,59 @@ final class DrumAppModel {
             switch update.event {
             case .added:
                 trackedDrums.removeValue(forKey: anchor.id)?.entity.removeFromParent()
-                let drum = await TrackedDrum(anchor: anchor)
-                trackedDrums[anchor.id] = drum
-                root.addChild(drum.entity)
+                do {
+                    let drum = try await TrackedDrum(anchor: anchor)
+                    guard activeRunID == runID, !Task.isCancelled else { return }
+                    trackedDrums[anchor.id] = drum
+                    root.addChild(drum.entity)
+                    errorMessage = nil
+                } catch {
+                    status = "오디오 리소스를 준비하지 못했습니다."
+                    errorMessage = "\(anchor.referenceObject.name)의 타격음을 불러오지 못했습니다: \(error.localizedDescription)"
+                }
             case .updated:
                 trackedDrums[anchor.id]?.update(anchor: anchor)
             case .removed:
                 trackedDrums.removeValue(forKey: anchor.id)?.entity.removeFromParent()
+                lastHitAt[anchor.id] = nil
             }
             let activeDrums = trackedDrums.values.filter(\.isTracked)
             trackedObjectCount = activeDrums.count
             if let trackedDrum = activeDrums.first {
-                status = "✓ \(trackedDrum.displayName) 인식 완료 — 위를 두드려 보세요"
+                status = "✓ \(trackedDrum.displayName) 인식 완료 · \(activeDrums.count)개 추적 중"
             } else {
                 status = "참조 물체를 찾는 중…"
+            }
+        }
+    }
+
+    private func consumeSessionEvents(from session: ARKitSession, runID: UUID) async {
+        for await event in session.events {
+            guard activeRunID == runID, !Task.isCancelled else { break }
+
+            switch event {
+            case .authorizationChanged(_, let authorizationStatus):
+                guard authorizationStatus == .denied else { continue }
+                status = "ARKit 권한이 중단되었습니다."
+                errorMessage = "손 추적 또는 주변 공간 접근 권한이 거부되었습니다. 권한을 다시 허용한 뒤 공간을 닫고 재시도하세요."
+                clearTrackingContent()
+                resetTrackingSession()
+                return
+
+            case .dataProviderStateChanged(_, let newState, let error):
+                if newState == .paused {
+                    status = "ARKit 추적이 일시 중지되었습니다."
+                } else if newState == .stopped {
+                    status = "ARKit 추적이 중단되었습니다."
+                    errorMessage = error?.localizedDescription
+                        ?? "Object Tracking 또는 Hand Tracking Provider가 중단되었습니다. 공간을 닫고 재시도하세요."
+                    clearTrackingContent()
+                    resetTrackingSession()
+                    return
+                }
+
+            @unknown default:
+                continue
             }
         }
     }
@@ -185,10 +239,16 @@ final class DrumAppModel {
             guard activeRunID == runID, !Task.isCancelled else { break }
             let hand = update.anchor
             guard hand.isTracked,
-                  let skeleton = hand.handSkeleton else { continue }
+                  let skeleton = hand.handSkeleton else {
+                previousTips[hand.chirality] = nil
+                continue
+            }
 
             let joint = skeleton.joint(.indexFingerTip)
-            guard joint.isTracked else { continue }
+            guard joint.isTracked else {
+                previousTips[hand.chirality] = nil
+                continue
+            }
 
             let transform = hand.originFromAnchorTransform * joint.anchorFromJointTransform
             let current = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)

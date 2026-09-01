@@ -1,0 +1,46 @@
+name: SpatialObjectDrums
+options:
+  bundleIdPrefix: com.example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    info:
+      path: SpatialObjectDrums/Info.plist
+      properties:
+        CFBundleDisplayName: Spatial Object Drums
+        ITSAppUsesNonExemptEncryption: false
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        NSHandsTrackingUsageDescription: 손가락이 실물 물체를 두드리는 동작을 감지합니다.
+        NSWorldSensingUsageDescription: Apple Magic Keyboard의 위치와 자세를 추적해 가상 타격 영역을 표시합니다.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.SpatialObjectDrums
+        PRODUCT_NAME: SpatialObjectDrums
+        CODE_SIGN_STYLE: Automatic
+        GENERATE_INFOPLIST_FILE: NO
+
+        TARGETED_DEVICE_FAMILY: "7"
+        SUPPORTS_MACCATALYST: NO
+schemes:
+  SpatialObjectDrums:
+    build:
+      targets:
+        SpatialObjectDrums: all
+    run:
+      config: Debug
+      enableGPUFrameCaptureMode: disabled
+      disableGPUValidationMode: true

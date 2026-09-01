@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="420" viewBox="0 0 1400 420" role="img" aria-labelledby="title description">
+  <title id="title">Reference Object 학습 파이프라인</title>
+  <desc id="description">실물과 일치하는 USDZ를 준비하고 Create ML로 학습해 referenceobject를 만든 뒤 Xcode와 ARKit에서 검증하는 네 단계</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101929"/>
+      <stop offset="1" stop-color="#0a2430"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#24364a"/>
+      <stop offset="1" stop-color="#172536"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0,0 L12,6 L0,12 Z" fill="#64d2ff"/>
+    </marker>
+    <style>
+      .heading { font: 700 27px -apple-system, BlinkMacSystemFont, sans-serif; fill: #f5f8ff; }
+      .label { font: 700 22px -apple-system, BlinkMacSystemFont, sans-serif; fill: #f5f8ff; }
+      .detail { font: 500 16px -apple-system, BlinkMacSystemFont, sans-serif; fill: #b7cadc; }
+      .number { font: 700 18px -apple-system, BlinkMacSystemFont, sans-serif; fill: #07131d; }
+    </style>
+  </defs>
+  <rect width="1400" height="420" rx="32" fill="url(#background)"/>
+  <text x="56" y="62" class="heading">Reference Object는 코드보다 먼저, 실물과 학습 자산을 맞추는 작업입니다</text>
+
+  <g transform="translate(55 105)">
+    <rect width="270" height="240" rx="24" fill="url(#card)" stroke="#35516b"/>
+    <circle cx="34" cy="36" r="18" fill="#64d2ff"/><text x="28" y="43" class="number">1</text>
+    <path d="M84 64 h106 l25 25 v73 h-131 z" fill="#64d2ff" opacity=".18" stroke="#64d2ff" stroke-width="3"/>
+    <path d="M190 64 v25 h25" fill="none" stroke="#64d2ff" stroke-width="3"/>
+    <text x="32" y="190" class="label">USDZ 준비</text>
+    <text x="32" y="218" class="detail">실물 치수 · 축 · 재질 확인</text>
+  </g>
+
+  <path d="M345 225 H405" stroke="#64d2ff" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <g transform="translate(425 105)">
+    <rect width="270" height="240" rx="24" fill="url(#card)" stroke="#35516b"/>
+    <circle cx="34" cy="36" r="18" fill="#64d2ff"/><text x="28" y="43" class="number">2</text>
+    <circle cx="135" cy="106" r="54" fill="#8a7dff" opacity=".2" stroke="#9b91ff" stroke-width="3"/>
+    <path d="M102 106 h66 M135 73 v66 M112 83 l46 46 M158 83 l-46 46" stroke="#b8b1ff" stroke-width="3"/>
+    <text x="32" y="190" class="label">Create ML 학습</text>
+    <text x="32" y="218" class="detail">각도 · 모드 · 피해야 할 물체</text>
+  </g>
+
+  <path d="M715 225 H775" stroke="#64d2ff" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <g transform="translate(795 105)">
+    <rect width="270" height="240" rx="24" fill="url(#card)" stroke="#35516b"/>
+    <circle cx="34" cy="36" r="18" fill="#64d2ff"/><text x="28" y="43" class="number">3</text>
+    <path d="M84 64 h106 l25 25 v73 h-131 z" fill="#30d158" opacity=".18" stroke="#30d158" stroke-width="3"/>
+    <path d="M190 64 v25 h25" fill="none" stroke="#30d158" stroke-width="3"/>
+    <path d="M112 117 l17 17 43-49" fill="none" stroke="#56e47b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="32" y="190" class="label">.referenceobject</text>
+    <text x="32" y="218" class="detail">Export · 이름 · 멤버십</text>
+  </g>
+
+  <path d="M1085 225 H1145" stroke="#64d2ff" stroke-width="5" marker-end="url(#arrow)"/>
+
+  <g transform="translate(1165 105)">
+    <rect width="180" height="240" rx="24" fill="url(#card)" stroke="#35516b"/>
+    <circle cx="34" cy="36" r="18" fill="#64d2ff"/><text x="28" y="43" class="number">4</text>
+    <rect x="48" y="68" width="84" height="74" rx="14" fill="#ff9f0a" opacity=".18" stroke="#ffb340" stroke-width="3"/>
+    <path d="M69 105 l17 17 31-39" fill="none" stroke="#ffc45c" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="26" y="190" class="label">검증</text>
+    <text x="26" y="218" class="detail">Xcode · 실기기</text>
+  </g>
+</svg>
