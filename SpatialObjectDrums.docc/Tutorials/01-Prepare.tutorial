@@ -135,32 +135,37 @@
                 @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
             @Step {
-                **5. Create ML Object Tracking 프로젝트를 만듭니다.** Xcode에서 **Xcode > Open Developer Tool > Create ML**을 선택하고 새 프로젝트의 **Spatial > Object Tracking** 템플릿을 엽니다. Model Sources에 USDZ를 드래그하고 3D 뷰포트의 외형과 표시 치수를 마지막으로 확인합니다.
+                **5. Xcode에서 Create ML을 엽니다.** macOS 메뉴 막대에서 **Xcode > Open Developer Tool > Create ML**을 선택합니다. Create ML의 시작 화면이 나타나면 **Create New Project…**를 누릅니다. 아래 화면은 Create ML 6.2의 실제 캡처입니다. Xcode 27에 포함된 빌드에서 배치가 조금 달라도 같은 메뉴와 버튼 이름을 찾으세요.
 
-                @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
+                @Image(source: "create-ml-welcome.png", alt: "Create ML 6.2 시작 화면의 Create New Project 버튼과 Open Existing Project 버튼")
             }
             @Step {
-                **6. Viewing Angles를 고릅니다.** 물체를 모든 방향으로 돌려 볼 때만 **All Angles**, 바닥에 세워 두고 밑면을 볼 필요가 없을 때 **Upright**, 뒤와 밑면을 볼 필요가 없는 고정 장비일 때 **Front**를 선택합니다. 필요 없는 각도를 제외할수록 해당 사용 자세에 집중해 학습할 수 있습니다. 비슷한 물체와 혼동된다면 **Objects to Avoid**에 그 물체의 USDZ를 추가합니다.
+                **6. Object Tracking 프로젝트를 만듭니다.** 왼쪽 템플릿 분류에서 **Spatial**을 선택하고 가운데의 **Object Tracking**을 선택한 다음 **Next**를 누릅니다. 프로젝트가 열리면 Model Sources에 USDZ를 드래그하고 3D 뷰포트의 외형과 표시 치수를 마지막으로 확인합니다.
+
+                @Image(source: "create-ml-object-tracking-template.png", alt: "Create ML 템플릿 선택 화면에서 왼쪽 Spatial 분류와 Object Tracking 템플릿이 선택된 모습")
+            }
+            @Step {
+                **7. Viewing Angles를 고릅니다.** 물체를 모든 방향으로 돌려 볼 때만 **All Angles**, 바닥에 세워 두고 밑면을 볼 필요가 없을 때 **Upright**, 뒤와 밑면을 볼 필요가 없는 고정 장비일 때 **Front**를 선택합니다. 필요 없는 각도를 제외할수록 해당 사용 자세에 집중해 학습할 수 있습니다. 비슷한 물체와 혼동된다면 **Objects to Avoid**에 그 물체의 USDZ를 추가합니다.
 
                 @Image(source: "tracking-options-decision.png", alt: "정지한 Magic Keyboard의 기본 추적과 빠르게 움직이는 물체의 고주파 추적을 비교하는 개념 이미지")
             }
             @Step {
-                **7. Training Mode를 선택합니다.** **Standard**는 대부분의 용도에 맞는 기본 모드이며 모델이 가볍고 프레임당 비용이 낮습니다. **Extended**는 더 많은 학습 데이터와 큰 모델을 사용해 가장 높은 추적 품질을 목표로 하지만 학습 시간이 몇 배 길어질 수 있습니다. 손에 들거나 계속 움직여 high-frame-rate tracking을 사용하는 물체에는 Extended를 권장하고, 정지 물체에서는 같은 조명·거리·가림 조건으로 두 결과를 비교해 실제 개선이 있을 때 선택합니다.
+                **8. Training Mode를 선택합니다.** **Standard**는 대부분의 용도에 맞는 기본 모드이며 모델이 가볍고 프레임당 비용이 낮습니다. **Extended**는 더 많은 학습 데이터와 큰 모델을 사용해 가장 높은 추적 품질을 목표로 하지만 학습 시간이 몇 배 길어질 수 있습니다. 손에 들거나 계속 움직여 high-frame-rate tracking을 사용하는 물체에는 Extended를 권장하고, 정지 물체에서는 같은 조명·거리·가림 조건으로 두 결과를 비교해 실제 개선이 있을 때 선택합니다.
 
                 @Image(source: "tracking-options-decision.png", alt: "정지한 Magic Keyboard의 기본 추적과 빠르게 움직이는 물체의 고주파 추적을 비교하는 개념 이미지")
             }
             @Step {
-                **8. 학습하고 내보냅니다.** Mac을 전원에 연결하고 **Train**을 누릅니다. 완료되면 **Output** 탭에서 공백이 없는 구분 가능한 이름으로 `.referenceobject`를 내보냅니다. 원본 USDZ, Create ML 프로젝트, viewing angle, training mode와 실물 사진을 함께 보관해 나중에 같은 결과를 재현할 수 있게 합니다.
+                **9. 학습하고 내보냅니다.** Mac을 전원에 연결하고 **Train**을 누릅니다. 완료되면 **Output** 탭에서 공백이 없는 구분 가능한 이름으로 `.referenceobject`를 내보냅니다. 원본 USDZ, Create ML 프로젝트, viewing angle, training mode와 실물 사진을 함께 보관해 나중에 같은 결과를 재현할 수 있게 합니다.
 
                 @Image(source: "reference-object-training-pipeline.png", alt: "실물과 일치하는 USDZ 준비부터 Create ML 학습, referenceobject 내보내기와 Xcode 검증까지의 흐름")
             }
             @Step {
-                **9. Target Membership을 설정합니다.** 결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 복사하고 `make project`를 실행합니다. Xcode File Inspector에서 SpatialObjectDrums Target Membership이 켜져 있는지 확인합니다. 같은 이름의 이전 파일을 교체했다면 Clean Build Folder 후 다시 설치합니다.
+                **10. Target Membership을 설정합니다.** 결과 파일을 `SpatialObjectDrums/Resources/ReferenceObjects`에 복사하고 `make project`를 실행합니다. Xcode File Inspector에서 SpatialObjectDrums Target Membership이 켜져 있는지 확인합니다. 같은 이름의 이전 파일을 교체했다면 Clean Build Folder 후 다시 설치합니다.
 
                 @Image(source: "developer-workstation-visionpro.png", alt: "visionOS 개발용 Mac, Apple Vision Pro와 Magic Keyboard를 함께 준비한 작업 환경의 개념 이미지")
             }
             @Step {
-                **10. `referenceobjectc`로 검증합니다.** `make validate`를 실행해 Xcode 27의 Reference Object Compiler가 새 파일을 임시 출력 폴더로 컴파일하는지 확인합니다. 명령이 성공 코드로 끝나고 컴파일된 출력 파일까지 만들어져야 검증을 통과한 것입니다. 오류가 나면 앱에서 시험하기 전에 export가 끝난 파일인지, Xcode 27을 선택했는지, 파일이 손상되지 않았는지부터 해결합니다.
+                **11. `referenceobjectc`로 검증합니다.** `make validate`를 실행해 Xcode 27의 Reference Object Compiler가 새 파일을 임시 출력 폴더로 컴파일하는지 확인합니다. 명령이 성공 코드로 끝나고 컴파일된 출력 파일까지 만들어져야 검증을 통과한 것입니다. 오류가 나면 앱에서 시험하기 전에 export가 끝난 파일인지, Xcode 27을 선택했는지, 파일이 손상되지 않았는지부터 해결합니다.
 
                 @Image(source: "magic-keyboard-reference-installation.png", alt: "Magic Keyboard 외형에서 Reference Object 파일을 만들고 프로젝트 리소스로 설치한 뒤 검증하는 흐름의 개념 이미지")
             }

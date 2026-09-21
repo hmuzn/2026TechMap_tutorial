@@ -45,6 +45,8 @@ SpatialObjectDrums.docc/SpatialObjectDrums.tutorial
 SpatialObjectDrums.docc/Resources/spatial-object-drums-hero-v2.png
 SpatialObjectDrums.docc/Resources/reference-object-training-pipeline.svg
 SpatialObjectDrums.docc/Resources/reference-object-training-pipeline.png
+SpatialObjectDrums.docc/Resources/create-ml-welcome.png
+SpatialObjectDrums.docc/Resources/create-ml-object-tracking-template.png
 SpatialObjectDrums.docc/Tutorials/01-Prepare.tutorial
 SpatialObjectDrums.docc/Tutorials/02-TrackObjects.tutorial
 SpatialObjectDrums.docc/Tutorials/03-PlayDrums.tutorial
@@ -134,7 +136,7 @@ done
 
 image_resources=$(sed -n 's/.*@Image(source: "\([^"]*\)".*/\1/p' SpatialObjectDrums.docc/*.tutorial SpatialObjectDrums.docc/Tutorials/*.tutorial)
 image_count=$(printf '%s\n' "$image_resources" | sed '/^$/d' | wc -l | tr -d ' ')
-[ "$image_count" -eq 50 ] || fail "DocC 설명 이미지 수가 예상과 다릅니다: $image_count (예상 50)"
+[ "$image_count" -eq 51 ] || fail "DocC 설명 이미지 수가 예상과 다릅니다: $image_count (예상 51)"
 for resource in $image_resources; do
     require_file "SpatialObjectDrums.docc/Resources/$resource"
 done
