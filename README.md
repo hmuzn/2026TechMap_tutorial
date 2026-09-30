@@ -19,6 +19,8 @@ Object Tracking과 Hand Tracking 실기기 결과는 Simulator에서 검증할 �
 
 Apple 최신 [Exploring object tracking with ARKit](https://developer.apple.com/documentation/visionos/exploring_object_tracking_with_arkit) 샘플에는 사전학습된 Magic Keyboard Reference Object가 포함되어 있습니다. 이 저장소는 Apple 바이너리를 재배포하지 않고 공식 샘플을 내려받아 저장소에 고정한 SHA-512와 Xcode 27 `referenceobjectc`로 검사합니다.
 
+가장 간단한 방법은 아래 설치 명령을 사용하는 것입니다. 직접 설치하려면 Apple 샘플 페이지에서 **Download**를 누르거나 [공식 샘플 ZIP](https://docs-assets.developer.apple.com/published/d76adf975589/ExploringObjectTrackingWithARKit.zip)을 내려받고, 압축 안의 `Reference Objects/Apple_Magic_Keyboard.referenceobject`를 `SpatialObjectDrums/Resources/ReferenceObjects/Apple_Magic_Keyboard.referenceobject`로 복사한 뒤 `make project`를 실행합니다.
+
 ```sh
 make install-magic-keyboard
 make validate
@@ -29,6 +31,8 @@ make validate
 Apple 문서는 샘플 Reference Object가 대응하는 Magic Keyboard의 정확한 세대나 치수를 명시하지 않습니다. 공식 파일로 인식되지 않는 다른 외형의 키보드는 같은 모델이라고 가정하지 말고, 해당 실물의 USDZ로 별도 Reference Object를 학습해야 합니다.
 
 ## 자신의 Reference Object 학습하기
+
+USDZ 준비와 Create ML 학습이 처음부터 부담스럽다면 이 과정은 건너뛰고 위의 Apple 공식 Magic Keyboard Reference Object로 앱 실행부터 확인하세요. 공식 파일이 자신의 키보드를 인식하지 않거나 다른 실물을 추적할 때만 자체 학습이 필요합니다.
 
 학습 전에 다음 항목을 먼저 확인합니다.
 

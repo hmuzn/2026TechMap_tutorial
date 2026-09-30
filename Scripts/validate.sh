@@ -72,6 +72,8 @@ require_text 'Apple Magic Keyboard' SpatialObjectDrums/DrumProfile.swift
 require_text 'wood-block.wav' SpatialObjectDrums/DrumProfile.swift
 require_text 'd76adf975589/ExploringObjectTrackingWithARKit.zip' Scripts/install_magic_keyboard_referenceobject.sh
 require_text 'd76adf97558952e1debb3171549b81b405c692fbb4e9c8397b62f191d14d01575ec0d466a18e85af1cf9cd255c16f4fc1f8a2afa445d4fe21f85482eacd71cf2' Scripts/install_magic_keyboard_referenceobject.sh
+require_text 'd76adf975589/ExploringObjectTrackingWithARKit.zip' SpatialObjectDrums.docc/Tutorials/01-Prepare.tutorial
+require_text 'Reference Objects/Apple_Magic_Keyboard.referenceobject' SpatialObjectDrums.docc/Tutorials/01-Prepare.tutorial
 require_text '--training-mode "$training_mode"' Scripts/train_reference_object.sh
 require_text 'runs-on: xcode-27' .github/workflows/validate-docc.yml
 require_text 'DOCC_HOSTING_BASE_PATH=2026TechMap_tutorial' .github/workflows/validate-docc.yml
@@ -136,7 +138,7 @@ done
 
 image_resources=$(sed -n 's/.*@Image(source: "\([^"]*\)".*/\1/p' SpatialObjectDrums.docc/*.tutorial SpatialObjectDrums.docc/Tutorials/*.tutorial)
 image_count=$(printf '%s\n' "$image_resources" | sed '/^$/d' | wc -l | tr -d ' ')
-[ "$image_count" -eq 51 ] || fail "DocC 설명 이미지 수가 예상과 다릅니다: $image_count (예상 51)"
+[ "$image_count" -eq 52 ] || fail "DocC 설명 이미지 수가 예상과 다릅니다: $image_count (예상 52)"
 for resource in $image_resources; do
     require_file "SpatialObjectDrums.docc/Resources/$resource"
 done
