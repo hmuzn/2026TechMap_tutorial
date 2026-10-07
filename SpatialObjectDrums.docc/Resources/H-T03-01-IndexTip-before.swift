@@ -11,16 +11,32 @@ final class DrumAppModel {
     var status = "참조 물체를 찾는 중…"
     var errorMessage: String?
     var trackedObjectCount = 0
+    var trackedHandCount = 0
 
     @ObservationIgnored private var session: ARKitSession?
     @ObservationIgnored private var handTracking: HandTrackingProvider?
     @ObservationIgnored private var objectTracking: ObjectTrackingProvider?
     @ObservationIgnored private(set) var trackedDrums: [UUID: TrackedDrum] = [:]
-    @ObservationIgnored private var previousTips: [HandAnchor.Chirality: SIMD3<Float>] = [:]
-    @ObservationIgnored private var lastHitAt: [UUID: ContinuousClock.Instant] = [:]
+    var strikePlaneOffset: Double = 0.012
+    var cooldownMilliseconds: Double = 100
+    var minimumStrikeSpeed: Double = 0.18
+    var showsStrikeSurface = true
+
+    @ObservationIgnored private var previousTips: [HandAnchor.Chirality: TipSample] = [:]
+    @ObservationIgnored private var lastHitAt: [UUID: [HandAnchor.Chirality: ContinuousClock.Instant]] = [:]
     @ObservationIgnored private var isRunning = false
     @ObservationIgnored private var activeRunID: UUID?
     @ObservationIgnored private var preparedReferenceObjects: [ReferenceObject]?
+    @ObservationIgnored private var trackedHands: Set<HandAnchor.Chirality> = []
+
+    var tuning: DrumTuning {
+        DrumTuning(
+            strikePlaneOffset: Float(strikePlaneOffset),
+            cooldownMilliseconds: cooldownMilliseconds,
+            minimumStrikeSpeed: Float(minimumStrikeSpeed),
+            showsStrikeSurface: showsStrikeSurface
+        )
+    }
 
     func prepareForImmersiveSpace() async -> Bool {
         errorMessage = nil
@@ -128,6 +144,8 @@ final class DrumAppModel {
         trackedDrums.values.forEach { $0.entity.removeFromParent() }
         trackedDrums.removeAll()
         trackedObjectCount = 0
+        trackedHandCount = 0
+        trackedHands.removeAll()
         previousTips.removeAll()
         lastHitAt.removeAll()
     }
@@ -143,14 +161,16 @@ final class DrumAppModel {
         // Xcode can either preserve the ReferenceObjects folder or flatten its
         // contents into the app bundle. Support both layouts so adding a file by
         // drag-and-drop and regenerating with XcodeGen behave the same way.
-        let nestedURLs = Bundle.main.urls(
-            forResourcesWithExtension: "referenceobject",
-            subdirectory: "ReferenceObjects"
-        ) ?? []
-        let rootURLs = Bundle.main.urls(
-            forResourcesWithExtension: "referenceobject",
-            subdirectory: nil
-        ) ?? []
+        let nestedURLs =
+            Bundle.main.urls(
+                forResourcesWithExtension: "referenceobject",
+                subdirectory: "ReferenceObjects"
+            ) ?? []
+        let rootURLs =
+            Bundle.main.urls(
+                forResourcesWithExtension: "referenceobject",
+                subdirectory: nil
+            ) ?? []
         let urls = Array(Set(nestedURLs + rootURLs)).sorted {
             $0.lastPathComponent < $1.lastPathComponent
         }
@@ -178,17 +198,19 @@ final class DrumAppModel {
             case .added:
                 trackedDrums.removeValue(forKey: anchor.id)?.entity.removeFromParent()
                 do {
-                    let drum = try await TrackedDrum(anchor: anchor)
+                    let drum = try await TrackedDrum(anchor: anchor, tuning: tuning)
                     guard activeRunID == runID, !Task.isCancelled else { return }
                     trackedDrums[anchor.id] = drum
                     root.addChild(drum.entity)
                     errorMessage = nil
                 } catch {
                     status = "오디오 리소스를 준비하지 못했습니다."
-                    errorMessage = "\(anchor.referenceObject.name)의 타격음을 불러오지 못했습니다: \(error.localizedDescription)"
+                    errorMessage =
+                        "\(anchor.referenceObject.name)의 타격음을 불러오지 못했습니다: \(error.localizedDescription)"
                 }
             case .updated:
                 trackedDrums[anchor.id]?.update(anchor: anchor)
+                trackedDrums[anchor.id]?.apply(tuning: tuning)
             case .removed:
                 trackedDrums.removeValue(forKey: anchor.id)?.entity.removeFromParent()
                 lastHitAt[anchor.id] = nil
@@ -221,7 +243,8 @@ final class DrumAppModel {
                     status = "ARKit 추적이 일시 중지되었습니다."
                 } else if newState == .stopped {
                     status = "ARKit 추적이 중단되었습니다."
-                    errorMessage = error?.localizedDescription
+                    errorMessage =
+                        error?.localizedDescription
                         ?? "Object Tracking 또는 Hand Tracking Provider가 중단되었습니다. 공간을 닫고 재시도하세요."
                     clearTrackingContent()
                     resetTrackingSession()
@@ -239,10 +262,21 @@ final class DrumAppModel {
             guard activeRunID == runID, !Task.isCancelled else { break }
             let hand = update.anchor
             guard hand.isTracked,
-                  let skeleton = hand.handSkeleton else {
+                let skeleton = hand.handSkeleton
+            else {
                 previousTips[hand.chirality] = nil
+                trackedHands.remove(hand.chirality)
+                trackedHandCount = trackedHands.count
                 continue
             }
+
+
+
+
+
+
+
+
 
 
 
@@ -256,10 +290,19 @@ final class DrumAppModel {
             guard let previous = previousTips[hand.chirality] else { continue }
 
             for drum in trackedDrums.values where drum.isTracked {
-                if let intensity = drum.hitIntensity(from: previous, to: current) {
+                if let intensity = drum.hitIntensity(
+                    from: previous.position,
+                    to: current.position,
+                    elapsed: previous.instant.duration(to: current.instant),
+                    tuning: tuning
+                ) {
                     let now = ContinuousClock.now
-                    if let last = lastHitAt[drum.id], now - last < .milliseconds(100) { continue }
-                    lastHitAt[drum.id] = now
+                    if let last = lastHitAt[drum.id]?[hand.chirality],
+                        now - last < tuning.cooldown
+                    {
+                        continue
+                    }
+                    lastHitAt[drum.id, default: [:]][hand.chirality] = now
                     drum.play(intensity: intensity)
                 }
             }
@@ -267,12 +310,18 @@ final class DrumAppModel {
     }
 }
 
+private struct TipSample {
+    let position: SIMD3<Float>
+    let instant: ContinuousClock.Instant
+}
+
 enum DrumError: LocalizedError {
     case unsupportedDevice, missingReferenceObjects
     var errorDescription: String? {
         switch self {
         case .unsupportedDevice: "이 기기는 Object Tracking 또는 Hand Tracking을 지원하지 않습니다."
-        case .missingReferenceObjects: "추적 모델이 없습니다. ReferenceObjects 폴더의 .referenceobject 파일을 확인한 뒤 다시 빌드하세요."
+        case .missingReferenceObjects:
+            "추적 모델이 없습니다. ReferenceObjects 폴더의 .referenceobject 파일을 확인한 뒤 다시 빌드하세요."
         }
     }
 }

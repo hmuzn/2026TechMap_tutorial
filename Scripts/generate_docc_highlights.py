@@ -136,8 +136,8 @@ HIGHLIGHTS = {
                 include_end=False,
             ),
             Span(
-                "            Button(buttonTitle) {",
-                "        .padding(40)",
+                "                Button(buttonTitle) {",
+                "            .padding(40)",
                 include_end=False,
             ),
             Span(
@@ -166,7 +166,7 @@ HIGHLIGHTS = {
     ),
     "H-T02-S02-P02-TrackedDrum-before.swift": Highlight(
         "TrackedDrum.swift",
-        (Span("    func update(anchor: ObjectAnchor) {", "    func hitIntensity(from previousWorld: SIMD3<Float>, to currentWorld: SIMD3<Float>) -> Float? {", include_end=False),),
+        (Span("    func update(anchor: ObjectAnchor) {", "    func apply(tuning: DrumTuning) {", include_end=False),),
     ),
     "H-T02-S02-P03-DrumAppModel-before.swift": Highlight(
         "DrumAppModel.swift",
@@ -204,7 +204,7 @@ HIGHLIGHTS = {
     "H-T03-02-ChiralityHistory-before.swift": Highlight(
         "DrumAppModel.swift",
         (
-            Span("    @ObservationIgnored private var previousTips: [HandAnchor.Chirality: SIMD3<Float>] = [:]"),
+            Span("    @ObservationIgnored private var previousTips: [HandAnchor.Chirality: TipSample] = [:]"),
             Span("            guard hand.isTracked,", "            }"),
             Span("            guard joint.isTracked else {", "            }"),
             Span("            defer { previousTips[hand.chirality] = current }"),
@@ -213,24 +213,23 @@ HIGHLIGHTS = {
     ),
     "H-T03-03-KeyboardLocal-before.swift": Highlight(
         "TrackedDrum.swift",
-        (Span("    func hitIntensity(from previousWorld: SIMD3<Float>, to currentWorld: SIMD3<Float>) -> Float? {", "        let top = hitPlaneY", include_end=False),),
+        (Span("    func hitIntensity(", "        let components = elapsed.components", include_end=False),),
     ),
     "H-T03-04-HitPlane-before.swift": Highlight(
         "TrackedDrum.swift",
         (
-            Span("    private static let strikePlaneOffset: Float = 0.012"),
-            Span("    private static let minimumHitIntensity: Float = 0.15"),
             Span("    private let hitPlaneY: Float"),
-            Span("        hitPlaneY = anchor.boundingBox.max.y + Self.strikePlaneOffset"),
+            Span("    private let hitDetector: HitDetector"),
+            Span("        hitPlaneY = anchor.boundingBox.max.y + tuning.strikePlaneOffset"),
             Span("        feedback.position = [center.x, hitPlaneY, center.z]"),
-            Span("        let top = hitPlaneY", "        return min(max(verticalDistance / 0.04, Self.minimumHitIntensity), 1)"),
+            Span("        return hitDetector.intensity(", "        )"),
         ),
     ),
     "H-T03-05-Cooldown-before.swift": Highlight(
         "DrumAppModel.swift",
         (
-            Span("    @ObservationIgnored private var lastHitAt: [UUID: ContinuousClock.Instant] = [:]"),
-            Span("                    let now = ContinuousClock.now", "                    lastHitAt[drum.id] = now")
+            Span("    @ObservationIgnored private var lastHitAt: [UUID: [HandAnchor.Chirality: ContinuousClock.Instant]] = [:]"),
+            Span("                    let now = ContinuousClock.now", "                    lastHitAt[drum.id, default: [:]][hand.chirality] = now")
         ),
     ),
     "H-T03-06-SpatialAudio-before.swift": Highlight(
@@ -238,7 +237,7 @@ HIGHLIGHTS = {
         (
             Span("    private let audio: AudioFileResource"),
             Span("        entity.spatialAudio = SpatialAudioComponent(gain: -6)", "        audio = try await AudioFileResource(named: selectedProfile.audioResource)"),
-            Span("        let normalizedIntensity = min(", "        entity.playAudio(audio)"),
+            Span("        let normalizedIntensity = min(max(intensity, 0), 1)", "        entity.playAudio(audio)"),
         ),
     ),
     "H-T03-07-OpacityFeedback-before.swift": Highlight(

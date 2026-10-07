@@ -35,6 +35,17 @@ options:
 
         TARGETED_DEVICE_FAMILY: "7"
         SUPPORTS_MACCATALYST: NO
+  SpatialObjectDrumsTests:
+    type: bundle.unit-test
+    platform: visionOS
+    sources:
+      - path: SpatialObjectDrumsTests
+    dependencies:
+      - target: SpatialObjectDrums
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.SpatialObjectDrumsTests
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   SpatialObjectDrums:
     build:
@@ -44,3 +55,7 @@ schemes:
       config: Debug
       enableGPUFrameCaptureMode: disabled
       disableGPUValidationMode: true
+    test:
+      config: Debug
+      targets:
+        - SpatialObjectDrumsTests

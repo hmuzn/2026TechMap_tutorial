@@ -39,7 +39,20 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B1C8DBA8B90D5913791DE57E"
+               BuildableName = "SpatialObjectDrumsTests.xctest"
+               BlueprintName = "SpatialObjectDrumsTests"
+               ReferencedContainer = "container:SpatialObjectDrums.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

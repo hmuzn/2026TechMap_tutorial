@@ -62,6 +62,8 @@ USDZ 준비와 Create ML 학습이 처음부터 부담스럽다면 이 과정은
 
 - `DrumAppModel.swift`: Reference Object 로드, ARKitSession, Object/Hand Anchor update
 - `TrackedDrum.swift`: Magic Keyboard 바운딩 박스, 가상 타격면, 공간 음향과 opacity 피드백
+- `HitDetector.swift`: 프레임 시간, 이동 거리와 하강 속도를 반영하는 순수 타격 판정
+- `DrumTuning.swift`: 타격면 높이, 최소 속도, 연타 간격과 표시 설정
 - `DrumProfile.swift`: Reference Object 이름과 Wood Block 음원 연결
 - `DrumRealityView.swift`: RealityView 생명주기와 상태 오버레이
 - `SpatialObjectDrums.docc`: 준비, Object Tracking, 손 타격의 세 튜토리얼
@@ -104,6 +106,12 @@ DocC의 기본 데스크톱 렌더러는 빠른 스크롤로 활성선을 건너
 텍스트만 있던 STEP의 오른쪽 미디어 패널에는 장비 준비, Reference Object 설치·학습, 추적 복구, 손가락 타격과 세션 생명주기를 설명하는 이미지를 배치했습니다. 대부분은 절차와 공간 관계를 설명하기 위한 **개념 이미지**입니다. Create ML 시작 화면과 `Spatial > Object Tracking` 템플릿 선택 화면은 Create ML 6.2의 실제 캡처이며, 메뉴 이름과 버튼 위치는 사용하는 Xcode 27 빌드에서 다시 확인하세요. 권한 대화상자와 실기기 추적 결과도 Apple Vision Pro에서 최종 확인해야 합니다.
 
 Xcode에서 **Product > Build Documentation**을 선택해 최종 렌더링을 확인하세요. Pull Request에서는 빌드만 검증하고, 공개 Pages 배포는 `main`의 검증이 성공했을 때만 실행합니다.
+
+## 안정성 검증
+
+타격 판정은 ARKit과 분리된 `HitDetector`로 구현해 정상 하향 통과, 역방향 이동, 영역 밖 통과, 느린 움직임, 오래되거나 비정상적으로 큰 좌표 변화를 단위 테스트합니다. 앱의 **연주 감도 설정**에서 타격면 높이, 최소 타격 속도, 양손별 연타 간격과 타격면 표시 여부를 실물·사용자에 맞게 조절할 수 있습니다.
+
+실기기 검증은 [`TESTING.md`](TESTING.md)의 체크리스트와 측정표를 사용합니다. Xcode·visionOS 빌드, 키보드 모델, 조도, 첫 인식 시간, 100회 타격 누락·오인식, 양손 연타와 추적 복구 결과를 함께 기록하세요.
 
 ## Apple 샘플 라이선스
 

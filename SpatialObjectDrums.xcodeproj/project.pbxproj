@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		003048E6226685084914B6BE /* SpatialObjectDrums.docc in Sources */ = {isa = PBXBuildFile; fileRef = 84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */; };
+		3D508269A93EFA35A8899810 /* HitDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B614A428BACF11E80FCFF0 /* HitDetector.swift */; };
+		45F6CE4A038B0CACD4630A02 /* DrumTuning.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADBE4E76ECBE2F26E075DC3 /* DrumTuning.swift */; };
 		4A597042635BC3D1F668A8EA /* SpatialObjectDrumsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */; };
 		62D48B8E6AE7A7E21C065E11 /* wood-block.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D68C9BD826B25E03C5BCEBC /* wood-block.wav */; };
 		911E4D8BB2BB404401DED8EB /* DrumProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0AD9B7A38377A93C23E3B8F /* DrumProfile.swift */; };
@@ -16,14 +18,29 @@
 		A97ED4C9E5677AD75DBE4D6D /* TrackedDrum.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */; };
 		BE3DD7164D1CFB6A7DA16C99 /* Apple_Magic_Keyboard.referenceobject in Resources */ = {isa = PBXBuildFile; fileRef = C83482A3921642F9BD3F2997 /* Apple_Magic_Keyboard.referenceobject */; };
 		BF9F6CBE21B053D100B995CC /* DrumRealityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9121B3269EDEC9C4D81B3E /* DrumRealityView.swift */; };
+		BFD0C8B3181B7458832A9C10 /* HitDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91BE08111717DB4EFE863291 /* HitDetectorTests.swift */; };
 		CE0A554E51348238D5C86E59 /* percussion-fx.wav in Resources */ = {isa = PBXBuildFile; fileRef = B31292B2C73C3410389CC749 /* percussion-fx.wav */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A74BF0DFDA74777A021DA87E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0EF778CC047ACE1250A232AA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B1FEE215D4E9FF0FB9AA29DB;
+			remoteInfo = SpatialObjectDrums;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialObjectDrumsApp.swift; sourceTree = "<group>"; };
+		46B614A428BACF11E80FCFF0 /* HitDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetector.swift; sourceTree = "<group>"; };
 		84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SpatialObjectDrums.docc; sourceTree = "<group>"; };
 		8FAE279F00729ECADB381E4F /* SpatialObjectDrums.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SpatialObjectDrums.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		91BE08111717DB4EFE863291 /* HitDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetectorTests.swift; sourceTree = "<group>"; };
+		96C20FF84B1F54858B89526E /* SpatialObjectDrumsTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SpatialObjectDrumsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D68C9BD826B25E03C5BCEBC /* wood-block.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "wood-block.wav"; sourceTree = "<group>"; };
+		AADBE4E76ECBE2F26E075DC3 /* DrumTuning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrumTuning.swift; sourceTree = "<group>"; };
 		AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedDrum.swift; sourceTree = "<group>"; };
 		B31292B2C73C3410389CC749 /* percussion-fx.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "percussion-fx.wav"; sourceTree = "<group>"; };
 		C83482A3921642F9BD3F2997 /* Apple_Magic_Keyboard.referenceobject */ = {isa = PBXFileReference; path = Apple_Magic_Keyboard.referenceobject; sourceTree = "<group>"; };
@@ -35,6 +52,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		2651613E2D0B93FD2731F28A /* SpatialObjectDrumsTests */ = {
+			isa = PBXGroup;
+			children = (
+				91BE08111717DB4EFE863291 /* HitDetectorTests.swift */,
+			);
+			path = SpatialObjectDrumsTests;
+			sourceTree = "<group>";
+		};
 		2BABE0F60CA8709EEDFFFDB7 /* ReferenceObjects */ = {
 			isa = PBXGroup;
 			children = (
@@ -50,6 +75,8 @@
 				CD0459251A0F942519CAB83C /* DrumAppModel.swift */,
 				F0AD9B7A38377A93C23E3B8F /* DrumProfile.swift */,
 				DF9121B3269EDEC9C4D81B3E /* DrumRealityView.swift */,
+				AADBE4E76ECBE2F26E075DC3 /* DrumTuning.swift */,
+				46B614A428BACF11E80FCFF0 /* HitDetector.swift */,
 				E13F88F67235617769391A1D /* Info.plist */,
 				1DDC322013A354E33702900D /* SpatialObjectDrumsApp.swift */,
 				AECC9B2D7ED8B09D61402FAE /* TrackedDrum.swift */,
@@ -71,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				8FAE279F00729ECADB381E4F /* SpatialObjectDrums.app */,
+				96C20FF84B1F54858B89526E /* SpatialObjectDrumsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,6 +117,7 @@
 			children = (
 				84F7117AC36DE82B8FE7961F /* SpatialObjectDrums.docc */,
 				32ACC34D24C8D0CCC5460615 /* SpatialObjectDrums */,
+				2651613E2D0B93FD2731F28A /* SpatialObjectDrumsTests */,
 				80FADDBB83D1B7026DA85486 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -96,6 +125,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B1C8DBA8B90D5913791DE57E /* SpatialObjectDrumsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4AE2C33AE8A3A35C3F56F668 /* Build configuration list for PBXNativeTarget "SpatialObjectDrumsTests" */;
+			buildPhases = (
+				E61884DA983F6D81931E488D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7C7F2E6C60A251C08BCEAE6A /* PBXTargetDependency */,
+			);
+			name = SpatialObjectDrumsTests;
+			packageProductDependencies = (
+			);
+			productName = SpatialObjectDrumsTests;
+			productReference = 96C20FF84B1F54858B89526E /* SpatialObjectDrumsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B1FEE215D4E9FF0FB9AA29DB /* SpatialObjectDrums */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A9343E01994A03AFA23FEF69 /* Build configuration list for PBXNativeTarget "SpatialObjectDrums" */;
@@ -143,6 +190,7 @@
 			projectRoot = "";
 			targets = (
 				B1FEE215D4E9FF0FB9AA29DB /* SpatialObjectDrums */,
+				B1C8DBA8B90D5913791DE57E /* SpatialObjectDrumsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -169,15 +217,50 @@
 				A370D0AF26974F0606CF6F9C /* DrumAppModel.swift in Sources */,
 				911E4D8BB2BB404401DED8EB /* DrumProfile.swift in Sources */,
 				BF9F6CBE21B053D100B995CC /* DrumRealityView.swift in Sources */,
+				45F6CE4A038B0CACD4630A02 /* DrumTuning.swift in Sources */,
+				3D508269A93EFA35A8899810 /* HitDetector.swift in Sources */,
 				003048E6226685084914B6BE /* SpatialObjectDrums.docc in Sources */,
 				4A597042635BC3D1F668A8EA /* SpatialObjectDrumsApp.swift in Sources */,
 				A97ED4C9E5677AD75DBE4D6D /* TrackedDrum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E61884DA983F6D81931E488D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BFD0C8B3181B7458832A9C10 /* HitDetectorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		7C7F2E6C60A251C08BCEAE6A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B1FEE215D4E9FF0FB9AA29DB /* SpatialObjectDrums */;
+			targetProxy = A74BF0DFDA74777A021DA87E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		26DC0E433D94618C6DA5DB04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SpatialObjectDrumsTests;
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpatialObjectDrums.app/SpatialObjectDrums";
+			};
+			name = Debug;
+		};
 		677A660EDFA4FEA7E4FFF980 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -339,9 +422,35 @@
 			};
 			name = Release;
 		};
+		FEB34D8B9C1DF8A912018123 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SpatialObjectDrumsTests;
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SpatialObjectDrums.app/SpatialObjectDrums";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4AE2C33AE8A3A35C3F56F668 /* Build configuration list for PBXNativeTarget "SpatialObjectDrumsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26DC0E433D94618C6DA5DB04 /* Debug */,
+				FEB34D8B9C1DF8A912018123 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		A9343E01994A03AFA23FEF69 /* Build configuration list for PBXNativeTarget "SpatialObjectDrums" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

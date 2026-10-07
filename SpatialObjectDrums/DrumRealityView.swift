@@ -23,8 +23,12 @@ struct DrumRealityView: View {
                 .foregroundStyle(model.trackedObjectCount > 0 ? Color.green : Color.primary)
 
                 if model.trackedObjectCount > 0 {
-                    Text("Magic Keyboard 위의 초록색 가상 타격면을 손가락으로 통과하세요.")
-                        .font(.callout)
+                    Text(
+                        model.trackedHandCount > 0
+                            ? "손 추적 준비 완료 · 타격면을 위에서 아래로 통과하세요."
+                            : "키보드 인식 완료 · 손을 시야 안에 보여주세요."
+                    )
+                    .font(.callout)
                 }
                 if let message = model.errorMessage {
                     Text(message)

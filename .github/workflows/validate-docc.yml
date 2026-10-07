@@ -37,6 +37,14 @@ jobs:
           -destination 'generic/platform=visionOS'
           -derivedDataPath DerivedData
           CODE_SIGNING_ALLOWED=NO
+      - name: Build unit tests
+        run: >-
+          xcodebuild build-for-testing
+          -project SpatialObjectDrums.xcodeproj
+          -scheme SpatialObjectDrums
+          -destination 'generic/platform=visionOS Simulator'
+          -derivedDataPath DerivedDataTests
+          CODE_SIGNING_ALLOWED=NO
       - name: Build documentation
         run: >-
           xcodebuild docbuild
