@@ -6,6 +6,8 @@ Xcode 27과 visionOS 27에서 Apple Vision Pro의 Object Tracking과 Hand Tracki
 
 **웹 튜토리얼:** [https://hmuzn.github.io/2026TechMap_tutorial/tutorials/spatialobjectdrums/](https://hmuzn.github.io/2026TechMap_tutorial/tutorials/spatialobjectdrums/)
 
+> **최근에 무엇이 바뀌었나요?** 2026년 10월 타격 안정성·양손 연주·설정 UI·자동 테스트 업데이트는 [`UPDATE_NOTES.md`](UPDATE_NOTES.md)에서 변경 전후 비교와 함께 확인할 수 있습니다.
+
 ## 요구 사항
 
 - Xcode 27을 실행할 수 있는 Apple Silicon Mac
